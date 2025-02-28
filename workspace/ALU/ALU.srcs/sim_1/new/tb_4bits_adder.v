@@ -20,34 +20,31 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module tb_f_adder();
-    reg a, b, cin;
-    wire s, c;
+module tb_4bits_adder();
+    reg [0:3] a, b;
+    wire [0:4] s;
+    integer i;
     
-    Full_adder u_f_adder(
+    four_bits_adder dut(
                          .a(a),
                          .b(b),
-                         .cin(cin),
-                         .cout(c),
-                         .sum(s)
-                         
+                         .result(s)
                         );
-    
+
     initial
         begin
             a = 0;
             b = 0;
             
-            #10
-            a = 1;
-            b = 1;
-            #10
-            a = 0;
-            b = 1;
-            #10
-            a = 1;
-            b = 0;
-            #10
+        for (i = 0; i < 8; i = i + 1)
+        begin
+            #100;
+            a = a + 4'b0001;
+            #100;
+            b = b + 4'b0001;
+        end
+
+            #100
             $finish;
         end
         

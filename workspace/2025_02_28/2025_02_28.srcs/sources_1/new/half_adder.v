@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 2025/02/27 14:50:37
+// Create Date: 2025/02/28 10:40:41
 // Design Name: 
-// Module Name: adder
+// Module Name: half_adder
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module adder(
-
-    );
+module half_adder(
+                    input a,
+                    input b,
+                    output sum,
+                    output carry
+                 );
+                 
+    xor (sum, a, b);
+    and (carry, a, b);
+                 
 endmodule
