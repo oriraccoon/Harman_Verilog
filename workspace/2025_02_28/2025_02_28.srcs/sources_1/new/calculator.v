@@ -21,8 +21,8 @@
 
 
 module calculator(
-                    input [3:0] a,
-                    input [3:0] b,
+                    input [7:0] a,
+                    input [7:0] b,
                     input [1:0] btn,
                     input cin,
                     //input clk,
@@ -31,14 +31,14 @@ module calculator(
                     output [3:0] an
                 );
 
-    wire [3:0] sum_in;
+    wire [8:0] sum_in;
 
-    Four_bits_adder fba(
+    Eight_bits_adder fba(
                         .a(a),
                         .b(b),
                         .cin(cin),
-                        .result(sum_in),
-                        .overflow(overflow)
+                        .result(sum_in[7:0]),
+                        .overflow(sum_in[8])
                     );
 
     fnd_ctrl fc(
