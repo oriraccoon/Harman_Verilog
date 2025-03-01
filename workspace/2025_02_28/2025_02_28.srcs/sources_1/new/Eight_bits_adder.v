@@ -20,3 +20,5 @@ wire fba_over;
                        .result(sum[7:4]),
                        .overflow(sum[8])
 );
+
+endmodule
