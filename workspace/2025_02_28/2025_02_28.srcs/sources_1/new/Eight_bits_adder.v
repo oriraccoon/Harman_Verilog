@@ -15,7 +15,8 @@ wire fba_over;
 );
 
 	Four_bits_adder fba2(.a(a[7:4]),
-                        input [3:0] b,
-                        input cin,
-                        output [3:0] result,
-                        output overflow
+                       .b(b[7:4]),
+                       .cin(fba_over),
+                       .result(sum[7:4]),
+                       .overflow(sum[8])
+);
