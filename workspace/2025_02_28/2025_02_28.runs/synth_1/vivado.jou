@@ -1,12 +1,14 @@
 #-----------------------------------------------------------
-# Vivado v2020.2 (64-bit)
-# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
-# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
-# Start of session at: Fri Feb 28 17:10:51 2025
-# Process ID: 17352
-# Current directory: C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/synth_1
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Sun Mar  2 18:09:17 2025
+# Process ID: 15048
+# Current directory: C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/synth_1
 # Command line: vivado.exe -log calculator.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source calculator.tcl
-# Log file: C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/synth_1/calculator.vds
-# Journal file: C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/synth_1\vivado.jou
+# Log file: C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/synth_1/calculator.vds
+# Journal file: C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/synth_1\vivado.jou
+# Running On: DESKTOP-LHQUG02, OS: Windows, CPU Frequency: 2371 MHz, CPU Physical cores: 6, Host memory: 16558 MB
 #-----------------------------------------------------------
 source calculator.tcl -notrace

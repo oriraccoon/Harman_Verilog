@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/synth_1/calculator.tcl"
+  variable script "C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/synth_1/calculator.tcl"
   variable category "vivado_synth"
 }
 
@@ -70,10 +70,10 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
-set_param chipscope.maxJobs 4
-set_param synth.incrementalSynthesisCache C:/Users/kccistc/AppData/Roaming/Xilinx/Vivado/.Xil/Vivado-2908-DESKTOP-7CFQ9ND/incrSyn
+set_param checkpoint.writeSynthRtdsInDcp 1
+set_param chipscope.maxJobs 1
+set_param synth.incrementalSynthesisCache C:/Users/ASUS/AppData/Roaming/Xilinx/Vivado/.Xil/Vivado-10480-DESKTOP-LHQUG02/incrSyn
 set_param xicom.use_bs_reader 1
-set_msg_config -id {Common 17-41} -limit 10000000
 set_msg_config -id {Synth 8-256} -limit 10000
 set_msg_config -id {Synth 8-638} -limit 10000
 OPTRACE "Creating in-memory project" START { }
@@ -82,23 +82,21 @@ create_project -in_memory -part xc7a35tcpg236-1
 set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
-set_property webtalk.parent_dir C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.cache/wt [current_project]
-set_property parent.project_path C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.xpr [current_project]
+set_property webtalk.parent_dir C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.cache/wt [current_project]
+set_property parent.project_path C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.xpr [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language Verilog [current_project]
-set_property board_part_repo_paths {C:/Users/kccistc/AppData/Roaming/Xilinx/Vivado/2020.2/xhub/board_store/xilinx_board_store} [current_project]
-set_property board_part digilentinc.com:basys3:part0:1.1 [current_project]
-set_property ip_output_repo c:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.cache/ip [current_project]
+set_property ip_output_repo c:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
 read_verilog -library xil_defaultlib {
-  C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/Four_bits_adder.v
-  C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/Full_adder.v
-  C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/fnd_ctrl.v
-  C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/fnd_decoder.v
-  C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/half_adder.v
-  C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/calculator.v
+  C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/Eight_bits_adder.v
+  C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/Four_bits_adder.v
+  C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/Full_adder.v
+  C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/fnd_ctrl.v
+  C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/half_adder.v
+  C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/sources_1/new/calculator.v
 }
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
@@ -109,8 +107,8 @@ OPTRACE "Adding files" END { }
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/constrs_1/imports/workspace/Basys-3-Master.xdc
-set_property used_in_implementation false [get_files C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/constrs_1/imports/workspace/Basys-3-Master.xdc]
+read_xdc C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/constrs_1/imports/workspace/Basys-3-Master.xdc
+set_property used_in_implementation false [get_files C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/constrs_1/imports/workspace/Basys-3-Master.xdc]
 
 set_param ips.enableIPCacheLiteLoad 1
 close [open __synthesis_is_running__ w]

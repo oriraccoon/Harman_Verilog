@@ -17,7 +17,7 @@ proc create_report { reportName command } {
   }
 }
 namespace eval ::optrace {
-  variable script "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/impl_1/calculator.tcl"
+  variable script "C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/impl_1/calculator.tcl"
   variable category "vivado_impl"
 }
 
@@ -115,7 +115,6 @@ proc step_failed { step } {
 OPTRACE "impl_1" END { }
 }
 
-set_msg_config -id {Common 17-41} -limit 10000000
 set_msg_config -id {Synth 8-256} -limit 10000
 set_msg_config -id {Synth 8-638} -limit 10000
 
@@ -125,30 +124,32 @@ start_step init_design
 set ACTIVE_STEP init_design
 set rc [catch {
   create_msg_db init_design.pb
-  set_param chipscope.maxJobs 4
-  set_param synth.incrementalSynthesisCache C:/Users/kccistc/AppData/Roaming/Xilinx/Vivado/.Xil/Vivado-2908-DESKTOP-7CFQ9ND/incrSyn
+  set_param checkpoint.writeSynthRtdsInDcp 1
+  set_param chipscope.maxJobs 1
+  set_param synth.incrementalSynthesisCache C:/Users/ASUS/AppData/Roaming/Xilinx/Vivado/.Xil/Vivado-10480-DESKTOP-LHQUG02/incrSyn
   set_param xicom.use_bs_reader 1
+  set_param runs.launchOptions { -jobs 6  }
 OPTRACE "create in-memory project" START { }
   create_project -in_memory -part xc7a35tcpg236-1
-  set_property board_part_repo_paths {C:/Users/kccistc/AppData/Roaming/Xilinx/Vivado/2020.2/xhub/board_store/xilinx_board_store} [current_project]
-  set_property board_part digilentinc.com:basys3:part0:1.1 [current_project]
   set_property design_mode GateLvl [current_fileset]
   set_param project.singleFileAddWarning.threshold 0
 OPTRACE "create in-memory project" END { }
 OPTRACE "set parameters" START { }
-  set_property webtalk.parent_dir C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.cache/wt [current_project]
-  set_property parent.project_path C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.xpr [current_project]
-  set_property ip_output_repo C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.cache/ip [current_project]
+  set_property webtalk.parent_dir C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.cache/wt [current_project]
+  set_property parent.project_path C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.xpr [current_project]
+  set_property ip_output_repo C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.cache/ip [current_project]
   set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "set parameters" END { }
 OPTRACE "add files" START { }
-  add_files -quiet C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/synth_1/calculator.dcp
+  add_files -quiet C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.runs/synth_1/calculator.dcp
 OPTRACE "read constraints: implementation" START { }
-  read_xdc C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/constrs_1/imports/workspace/Basys-3-Master.xdc
+  read_xdc C:/Users/ASUS/Documents/GitHub/Harman_Verilog/workspace/2025_02_28/2025_02_28.srcs/constrs_1/imports/workspace/Basys-3-Master.xdc
 OPTRACE "read constraints: implementation" END { }
+OPTRACE "read constraints: implementation_pre" START { }
+OPTRACE "read constraints: implementation_pre" END { }
 OPTRACE "add files" END { }
 OPTRACE "link_design" START { }
-  link_design -top calculator -part xc7a35tcpg236-1
+  link_design -top calculator -part xc7a35tcpg236-1 
 OPTRACE "link_design" END { }
 OPTRACE "gray box cells" START { }
 OPTRACE "gray box cells" END { }
@@ -179,12 +180,12 @@ OPTRACE "opt_design" START { }
 OPTRACE "opt_design" END { }
 OPTRACE "read constraints: opt_design_post" START { }
 OPTRACE "read constraints: opt_design_post" END { }
-OPTRACE "Opt Design: write_checkpoint" START { CHECKPOINT }
-  write_checkpoint -force calculator_opt.dcp
-OPTRACE "Opt Design: write_checkpoint" END { }
 OPTRACE "opt_design reports" START { REPORT }
   create_report "impl_1_opt_report_drc_0" "report_drc -file calculator_drc_opted.rpt -pb calculator_drc_opted.pb -rpx calculator_drc_opted.rpx"
 OPTRACE "opt_design reports" END { }
+OPTRACE "Opt Design: write_checkpoint" START { CHECKPOINT }
+  write_checkpoint -force calculator_opt.dcp
+OPTRACE "Opt Design: write_checkpoint" END { }
   close_msg_db -file opt_design.pb
 } RESULT]
 if {$rc} {
@@ -213,14 +214,14 @@ OPTRACE "place_design" START { }
 OPTRACE "place_design" END { }
 OPTRACE "read constraints: place_design_post" START { }
 OPTRACE "read constraints: place_design_post" END { }
-OPTRACE "Place Design: write_checkpoint" START { CHECKPOINT }
-  write_checkpoint -force calculator_placed.dcp
-OPTRACE "Place Design: write_checkpoint" END { }
 OPTRACE "place_design reports" START { REPORT }
   create_report "impl_1_place_report_io_0" "report_io -file calculator_io_placed.rpt"
   create_report "impl_1_place_report_utilization_0" "report_utilization -file calculator_utilization_placed.rpt -pb calculator_utilization_placed.pb"
   create_report "impl_1_place_report_control_sets_0" "report_control_sets -verbose -file calculator_control_sets_placed.rpt"
 OPTRACE "place_design reports" END { }
+OPTRACE "Place Design: write_checkpoint" START { CHECKPOINT }
+  write_checkpoint -force calculator_placed.dcp
+OPTRACE "Place Design: write_checkpoint" END { }
   close_msg_db -file place_design.pb
 } RESULT]
 if {$rc} {
@@ -244,11 +245,11 @@ OPTRACE "phys_opt_design" START { }
 OPTRACE "phys_opt_design" END { }
 OPTRACE "read constraints: phys_opt_design_post" START { }
 OPTRACE "read constraints: phys_opt_design_post" END { }
+OPTRACE "phys_opt_design report" START { REPORT }
+OPTRACE "phys_opt_design report" END { }
 OPTRACE "Post-Place Phys Opt Design: write_checkpoint" START { CHECKPOINT }
   write_checkpoint -force calculator_physopt.dcp
 OPTRACE "Post-Place Phys Opt Design: write_checkpoint" END { }
-OPTRACE "phys_opt_design report" START { REPORT }
-OPTRACE "phys_opt_design report" END { }
   close_msg_db -file phys_opt_design.pb
 } RESULT]
 if {$rc} {
@@ -272,9 +273,6 @@ OPTRACE "route_design" START { }
 OPTRACE "route_design" END { }
 OPTRACE "read constraints: route_design_post" START { }
 OPTRACE "read constraints: route_design_post" END { }
-OPTRACE "Route Design: write_checkpoint" START { CHECKPOINT }
-  write_checkpoint -force calculator_routed.dcp
-OPTRACE "Route Design: write_checkpoint" END { }
 OPTRACE "route_design reports" START { REPORT }
   create_report "impl_1_route_report_drc_0" "report_drc -file calculator_drc_routed.rpt -pb calculator_drc_routed.pb -rpx calculator_drc_routed.rpx"
   create_report "impl_1_route_report_methodology_0" "report_methodology -file calculator_methodology_drc_routed.rpt -pb calculator_methodology_drc_routed.pb -rpx calculator_methodology_drc_routed.rpx"
@@ -285,12 +283,15 @@ OPTRACE "route_design reports" START { REPORT }
   create_report "impl_1_route_report_clock_utilization_0" "report_clock_utilization -file calculator_clock_utilization_routed.rpt"
   create_report "impl_1_route_report_bus_skew_0" "report_bus_skew -warn_on_violation -file calculator_bus_skew_routed.rpt -pb calculator_bus_skew_routed.pb -rpx calculator_bus_skew_routed.rpx"
 OPTRACE "route_design reports" END { }
+OPTRACE "Route Design: write_checkpoint" START { CHECKPOINT }
+  write_checkpoint -force calculator_routed.dcp
+OPTRACE "Route Design: write_checkpoint" END { }
 OPTRACE "route_design misc" START { }
   close_msg_db -file route_design.pb
-OPTRACE "route_design write_checkpoint" START { CHECKPOINT }
-OPTRACE "route_design write_checkpoint" END { }
 } RESULT]
 if {$rc} {
+OPTRACE "route_design write_checkpoint" START { CHECKPOINT }
+OPTRACE "route_design write_checkpoint" END { }
   write_checkpoint -force calculator_routed_error.dcp
   step_failed route_design
   return -code error $RESULT

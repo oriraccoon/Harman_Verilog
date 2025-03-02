@@ -1,89 +1,94 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 2025/02/28 14:31:58
-// Design Name: 
-// Module Name: fnd_ctrl
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-
 module fnd_ctrl(
-                input [3:0] sum_in,
-                input [1:0] btn,
-                output [7:0] seg_out,
-                output [3:0] an
-                );
+    input [8:0] sum_in,
+    input clk,  // 100MHz ÀÔ·Â Å¬·°
 
-    btn2comm u_btn2comm (
-        .btn(btn),
-        .seg_comm(an)
-    );
-
-
-    bcd2seg bs(
-                .sum_in(sum_in),
-                .seg_out(seg_out)
-                );
-
-endmodule
-
-module btn2comm (
-    input [1:0] btn,
-    output reg [3:0] seg_comm
+    output reg [7:0] seg_out,
+    output reg [3:0] an
 );
 
-    always @(btn) begin
-        case (btn)
-            2'b00:   seg_comm = 4'b1110;
-            2'b01:   seg_comm = 4'b1101;
-            2'b10:   seg_comm = 4'b1011;
-            2'b11:   seg_comm = 4'b0111;
-            default: seg_comm = 4'b1111;
+wire [15:0] digit;
+reg [7:0] seg_state;
+reg [19:0] clk_div;  // Å¬·° ºÐÁÖ¿ë Ä«¿îÅÍ
+
+digit_num dn(
+    .sum(sum_in),
+    .digit(digit)
+);
+
+initial begin
+    an = 4'b1110;
+    seg_out = 8'hFF;  // ÃÊ±â°ª ¼³Á¤
+end
+
+always @(posedge clk) begin
+    clk_div <= clk_div + 1;
+
+    if (clk_div == 100000) begin  // 100MHz / 100000 = 1kHz (1ms)
+        clk_div <= 0;
+        
+        case (an)
+            4'b0111: begin
+                an <= 4'b1110;
+                seg_out <= bcd2seg(digit[3:0]);   // 1ÀÇ ÀÚ¸®
+            end
+            4'b1110: begin
+                an <= 4'b1101;
+                seg_out <= bcd2seg(digit[7:4]);   // 10ÀÇ ÀÚ¸®
+            end
+            4'b1101: begin
+                an <= 4'b1011;
+                seg_out <= bcd2seg(digit[11:8]);  // 100ÀÇ ÀÚ¸®
+            end
+            4'b1011: begin
+                an <= 4'b0111;
+                seg_out <= bcd2seg(digit[15:12]); // 1000ÀÇ ÀÚ¸®
+            end
+            default: begin
+                an <= 4'b1110;
+                seg_out <= 8'hFF;
+            end
         endcase
     end
+end
 endmodule
 
 
-
-
-module bcd2seg(
-                input [3:0] sum_in,
-                output reg [7:0] seg_out
-            );
-
+module digit_num(
+    input [8:0] sum,
+    output reg [15:0] digit  // ? output reg·Î º¯°æ
+);
     always @(*) begin
+        digit[3:0] = ((sum % 1000) % 100) % 10;
+        digit[7:4] = ((sum % 1000) % 100) / 10;
+        digit[11:8] = (sum % 1000) / 100;
+        digit[15:12] = sum / 1000;
+    end
+endmodule
+
+
+
+function automatic reg [7:0] bcd2seg(
+    input [3:0] sum_in
+);
+    begin
         case (sum_in)
-            4'h0:  seg_out = 8'hC0;
-            4'h1:  seg_out = 8'hF9;
-            4'h2:  seg_out = 8'hA4;
-            4'h3:  seg_out = 8'hB0;
-            4'h4:  seg_out = 8'h99;
-            4'h5:  seg_out = 8'h92;
-            4'h6:  seg_out = 8'h82;
-            4'h7:  seg_out = 8'hF8;
-            4'h8:  seg_out = 8'h80;
-            4'h9:  seg_out = 8'h90;
-            4'hA:  seg_out = 8'h88;
-            4'hB:  seg_out = 8'h83;
-            4'hC:  seg_out = 8'hC6;
-            4'hD:  seg_out = 8'hA1;
-            4'hE:  seg_out = 8'h86;
-            4'hF:  seg_out = 8'h8E;
-            default: seg_out = 8'hFF; // ê¸°ë³¸ê°’ (ëª¨ë“  LED OFF)
+            4'h0:  bcd2seg = 8'hC0;
+            4'h1:  bcd2seg = 8'hF9;
+            4'h2:  bcd2seg = 8'hA4;
+            4'h3:  bcd2seg = 8'hB0;
+            4'h4:  bcd2seg = 8'h99;
+            4'h5:  bcd2seg = 8'h92;
+            4'h6:  bcd2seg = 8'h82;
+            4'h7:  bcd2seg = 8'hF8;
+            4'h8:  bcd2seg = 8'h80;
+            4'h9:  bcd2seg = 8'h90;
+            4'hA:  bcd2seg = 8'h88;
+            4'hB:  bcd2seg = 8'h83;
+            4'hC:  bcd2seg = 8'hC6;
+            4'hD:  bcd2seg = 8'hA1;
+            4'hE:  bcd2seg = 8'h86;
+            4'hF:  bcd2seg = 8'h8E;
+            default: bcd2seg = 8'hFF;
         endcase
     end
-
-endmodule
+endfunction
