@@ -1,6 +1,6 @@
 module fnd_ctrl(
     input [8:0] sum_in,
-    input clk,  // 100MHz 입력 클럭
+    input clk,
 
     output reg [7:0] seg_out,
     output reg [3:0] an
@@ -8,7 +8,7 @@ module fnd_ctrl(
 
 wire [15:0] digit;
 reg [7:0] seg_state;
-reg [19:0] clk_div;  // 클럭 분주용 카운터
+reg [19:0] clk_div;
 
 digit_num dn(
     .sum(sum_in),
@@ -17,13 +17,13 @@ digit_num dn(
 
 initial begin
     an = 4'b1110;
-    seg_out = 8'hFF;  // 초기값 설정
+    seg_out = 8'hFF;
 end
 
 always @(posedge clk) begin
     clk_div <= clk_div + 1;
 
-    if (clk_div == 100000) begin  // 100MHz / 100000 = 1kHz (1ms)
+    if (clk_div == 100000) begin
         clk_div <= 0;
         
         case (an)
@@ -55,7 +55,7 @@ endmodule
 
 module digit_num(
     input [8:0] sum,
-    output reg [15:0] digit  // ? output reg로 변경
+    output reg [15:0] digit
 );
     always @(*) begin
         digit[3:0] = ((sum % 1000) % 100) % 10;
@@ -67,7 +67,7 @@ endmodule
 
 
 
-function automatic reg [7:0] bcd2seg(
+function reg [7:0] bcd2seg(
     input [3:0] sum_in
 );
     begin
