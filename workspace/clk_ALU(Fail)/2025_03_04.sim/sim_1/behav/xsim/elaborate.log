@@ -1,0 +1,65 @@
+Vivado Simulator 2020.2
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2020.2/bin/unwrapped/win64.o/xelab.exe -wto ac10873be94f46a5801f6c34bcaf4793 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot tb_clkbcd_behav xil_defaultlib.tb_clkbcd xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3091] actual bit length 7 differs from formal bit length 8 for port 'seg' [C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v:49]
+WARNING: [VRFC 10-3091] actual bit length 9 differs from formal bit length 8 for port 'seg' [C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v:53]
+Completed static elaboration
+Starting simulation data flow analysis
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/calculator.v" Line 1. Module calculator doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Eight_bits_adder.v" Line 1. Module Eight_bits_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Four_bits_adder.v" Line 1. Module Four_bits_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Four_bits_adder.v" Line 1. Module Four_bits_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 1. Module fnd_ctrl doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 115. Module digit_num doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 31. Module counter_4 doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 146. Module bcd2seg doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 146. Module bcd2seg doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 146. Module bcd2seg doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 146. Module bcd2seg doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 128. Module clk_mux doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/calculator.v" Line 1. Module calculator doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Eight_bits_adder.v" Line 1. Module Eight_bits_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Four_bits_adder.v" Line 1. Module Four_bits_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Four_bits_adder.v" Line 1. Module Four_bits_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/Full_adder.v" Line 1. Module Full_adder doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 1. Module fnd_ctrl doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 115. Module digit_num doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 31. Module counter_4 doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 146. Module bcd2seg doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 146. Module bcd2seg doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 146. Module bcd2seg doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 146. Module bcd2seg doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/2025_03_04/2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" Line 128. Module clk_mux doesn't have a timescale but at least one module in design has a timescale.
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.half_adder
+Compiling module xil_defaultlib.Full_adder
+Compiling module xil_defaultlib.Four_bits_adder
+Compiling module xil_defaultlib.Eight_bits_adder
+Compiling module xil_defaultlib.digit_num
+Compiling module xil_defaultlib.bcd2seg
+Compiling module xil_defaultlib.clk_mux
+Compiling module xil_defaultlib.counter_4
+Compiling module xil_defaultlib.fnd_ctrl
+Compiling module xil_defaultlib.calculator
+Compiling module xil_defaultlib.tb_clkbcd
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot tb_clkbcd_behav

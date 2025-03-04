@@ -1,0 +1,15 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../2025_03_04.srcs/sources_1/imports/new/Eight_bits_adder.v" \
+"../../../../2025_03_04.srcs/sources_1/imports/new/Four_bits_adder.v" \
+"../../../../2025_03_04.srcs/sources_1/imports/new/Full_adder.v" \
+"../../../../2025_03_04.srcs/sources_1/imports/new/calculator.v" \
+"../../../../2025_03_04.srcs/sources_1/imports/new/fnd_ctrl.v" \
+"../../../../2025_03_04.srcs/sources_1/imports/new/half_adder.v" \
+"../../../../2025_03_04.srcs/sim_1/new/tb_clkbcd.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
