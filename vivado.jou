@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Thu Mar  6 16:37:39 2025
+# Process ID: 2780
+# Current directory: C:/Users/kccistc/Documents/GitHub/Harman_Verilog
+# Command line: vivado.exe
+# Log file: C:/Users/kccistc/Documents/GitHub/Harman_Verilog/vivado.log
+# Journal file: C:/Users/kccistc/Documents/GitHub/Harman_Verilog\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/Timer/Timer.xpr
+update_compile_order -fileset sources_1
