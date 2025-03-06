@@ -1,0 +1,4 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/p348/p348.srcs/sources_1/new/continuous_FSM.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module continuous_FSM
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/p348/p348.srcs/sim_1/new/tb_continuous_FSM.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_continuous_FSM
