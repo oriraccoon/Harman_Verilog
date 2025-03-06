@@ -1,4 +1,4 @@
-module five_SM(
+module moore_SM(
                 input clk,
                 input rst,
                 input [2:0] sw,

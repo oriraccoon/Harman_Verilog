@@ -13,12 +13,6 @@ module counter_10k(
     .rst(rst),
     .o_clk(o_clk)
     );
-    
-    five_SM  fsm(
-                .clk(clk),
-                .rst(rst),
-                .state(state)
-    );
 
     always@(posedge o_clk or posedge rst) begin
         if(rst) begin

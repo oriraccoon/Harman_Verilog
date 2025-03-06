@@ -2,12 +2,12 @@ module five_SM(
                 input clk,
                 input rst,
                 input [2:0] sw,
-                output reg [2:0] state
+                output reg [2:0] next
     );
 
-    parameter [2:0] STAY = 3'b000, START = 3'b001, CLEAR = 3'b010, U_CLEAR = 3'b011;
+    parameter [2:0] STAY = 3'b000, START = 3'b001, CLEAR1 = 3'b010, CLEAR2 = 3'b011;
 
-    reg [2:0] next;
+    reg [2:0] state;
 
     always @(posedge clk, posedge rst) begin
         if(rst) state <= 0;
@@ -18,19 +18,23 @@ module five_SM(
         next = state;
         case(state)
             STAY: begin
-                if(sw == 3'b001) next = ST1;
+                if(sw == START) next = START;
+                else if(sw == CLEAR1) next = CLEAR1;
                 else next = state;
             end
-            ST1: begin
-                if(sw == 3'b010) next = ST2;
+            START: begin
+                if(sw == STAY) next = STAY;
+                else if(sw == CLEAR2) next = CLEAR2;
                 else next = state;
             end
-            ST2: begin
-                if(sw == 3'b011) next = ST3;
+            CLEAR1: begin
+                if(sw == CLEAR2) next = CLEAR2;
+                else if(sw == STAY) next = STAY;
                 else next = state;
             end
-            ST3: begin
-                if(sw == 3'b000) next = ST1;
+            CLEAR2: begin
+                if(sw == CLEAR1) next = CLEAR1;
+                // else if(sw == START) next = START;  // Reset과 Clear의 차이 실험
                 else next = state;
             end
             default: begin
