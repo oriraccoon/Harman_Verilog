@@ -34,7 +34,7 @@ module five_SM(
             end
             CLEAR2: begin
                 if(sw == CLEAR1) next = CLEAR1;
-                // else if(sw == START) next = START;  // Reset과 Clear의 차이 실험
+                // else if(sw == START) next = START;  // Reset과 Clear의 차이 실험  
                 else next = state;
             end
             default: begin
