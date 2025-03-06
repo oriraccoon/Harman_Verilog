@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Wed Mar  5 16:27:22 2025
+# Process ID: 8276
+# Current directory: C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/FSM_prac/FSM_prac.runs/synth_1
+# Command line: vivado.exe -log five_SM.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source five_SM.tcl
+# Log file: C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/FSM_prac/FSM_prac.runs/synth_1/five_SM.vds
+# Journal file: C:/Users/kccistc/Documents/GitHub/Harman_Verilog/workspace/FSM_prac/FSM_prac.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source five_SM.tcl -notrace
