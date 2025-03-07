@@ -1,16 +1,11 @@
 $repoPath = "C:\Users\kccistc\Documents\GitHub\Harman_Verilog"  # 로컬 레포지토리 경로
 $gitExe = "C:\Program Files\Git\bin\git.exe"   # Git 실행 파일 경로
+$vivadoPath = "C:\Xilinx\Vivado\2020.2\bin\vivado.bat"  # Vivado 실행 경로
+$vivadoProcess = "vivado.exe"  # Vivado 프로세스 이름
 
-# Vivado 프로세스 감지
-$vivadoProcess = "vivado.exe"
-
-# Vivado 실행 여부 확인
-$processRunning = Get-Process -Name $vivadoProcess -ErrorAction SilentlyContinue
-
-if ($processRunning) {
-    Write-Host "Vivado 실행 중... 종료될 때까지 대기합니다."
-    Wait-Process -Name $vivadoProcess
-}
+# Vivado 실행
+Write-Host "Vivado를 실행합니다..."
+Start-Process -FilePath $vivadoPath -NoNewWindow -Wait
 
 Write-Host "Vivado 종료 감지됨. Git 자동 커밋 및 푸시 시작."
 
