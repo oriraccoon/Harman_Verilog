@@ -4,10 +4,10 @@ $vivadoPath = "C:\Xilinx\Vivado\2020.2\bin\vivado.bat"  # Vivado 실행 경로
 $vivadoProcess = "vivado.exe"  # Vivado 프로세스 이름
 
 # Vivado 실행
-Write-Host "Vivado를 실행합니다..."
+Write-Host "Vivado 2020.2 Start!!"
 Start-Process -FilePath $vivadoPath -NoNewWindow -Wait
 
-Write-Host "Vivado 종료 감지됨. Git 자동 커밋 및 푸시 시작."
+Write-Host "Vivado Closed. Git Auto Commit & Push Start!!"
 
 # Git 커밋 및 푸시 수행
 Set-Location -Path $repoPath
