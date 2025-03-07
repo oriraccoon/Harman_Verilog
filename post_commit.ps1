@@ -20,7 +20,7 @@ $commitMessage = "Auto commit after Vivado closed at $currentTime"
 & $gitExe commit -m $commitMessage
 & $gitExe push origin main
 
-Write-Host "Git 자동 커밋 및 푸시 완료."
+Write-Host "Git Auto Commit & Push done."
 
 # 3초 대기 후 PowerShell 창 종료
 Start-Sleep -Seconds 3
