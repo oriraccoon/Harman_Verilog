@@ -1,29 +1,31 @@
-# git_auto_commit_push.ps1
 $repoPath = "C:\Users\kccistc\Documents\GitHub\Harman_Verilog"  # 로컬 레포지토리 경로
 $gitExe = "C:\Program Files\Git\bin\git.exe"   # Git 실행 파일 경로
 
-# Vivado 종료 감지 (Vivado 프로세스 이름)
+# Vivado 프로세스 감지
 $vivadoProcess = "vivado.exe"
-$processRunning = Get-Process | Where-Object { $_.Name -eq $vivadoProcess }
 
-while ($processRunning) {
-    Start-Sleep -Seconds 5
-    $processRunning = Get-Process | Where-Object { $_.Name -eq $vivadoProcess }
+# Vivado 실행 여부 확인
+$processRunning = Get-Process -Name $vivadoProcess -ErrorAction SilentlyContinue
+
+if ($processRunning) {
+    Write-Host "Vivado 실행 중... 종료될 때까지 대기합니다."
+    Wait-Process -Name $vivadoProcess
 }
 
-# Vivado가 종료되면 Git 자동 커밋 및 푸시
+Write-Host "Vivado 종료 감지됨. Git 자동 커밋 및 푸시 시작."
+
+# Git 커밋 및 푸시 수행
 Set-Location -Path $repoPath
 
 # 현재 시간 포맷 (예: 2025-03-06 15:30)
 $currentTime = Get-Date -Format "yyyy-MM-dd HH:mm"
-
-# 커밋 메시지에 시간 포함
 $commitMessage = "Auto commit after Vivado closed at $currentTime"
 
-# Git 커밋 및 푸시
 & $gitExe add .
 & $gitExe commit -m $commitMessage
 & $gitExe push origin main
+
+Write-Host "Git 자동 커밋 및 푸시 완료."
 
 # 3초 대기 후 PowerShell 창 종료
 Start-Sleep -Seconds 3
