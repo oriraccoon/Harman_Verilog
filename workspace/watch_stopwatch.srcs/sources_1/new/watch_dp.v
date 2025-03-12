@@ -160,7 +160,7 @@ module watch_hour_counter(
             end
         end else if (m_tick) begin
             if (h_counter == 23) begin
-                h_counter <= 0;
+                h_counter <= 12;
             end else begin
                 h_counter <= h_counter + 1;
             end

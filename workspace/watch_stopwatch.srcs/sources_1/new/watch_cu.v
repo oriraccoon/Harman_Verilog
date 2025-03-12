@@ -7,32 +7,31 @@ module watch_cu(
                     input sw_mod,
                     input w_mod,
                     input pm_mod,
-                    output reg o_sec_mod,
-                    output reg o_min_mod,
-                    output reg o_hour_mod,
+                    output o_sec_mod,
+                    output o_min_mod,
+                    output o_hour_mod,
                     output reg o_mod,
                     output reg o_pm_mod
 );
 
-    wire w_hour_mod, w_sec_mod, w_min_mod;
 
     btn_edge_trigger U_btn_hour(
                         .clk(clk),
                         .rst(rst),
                         .i_btn(i_btn_run),
-                        .o_btn(w_hour_mod)
+                        .o_btn(o_hour_mod)
     );
     btn_edge_trigger U_btn_sec(
                         .clk(clk),
                         .rst(rst),
                         .i_btn(i_btn_sec_cal),
-                        .o_btn(w_sec_mod)
+                        .o_btn(o_sec_mod)
     );
     btn_edge_trigger U_btn_min(
                         .clk(clk),
                         .rst(rst),
                         .i_btn(i_btn_min_cal),
-                        .o_btn(w_min_mod)
+                        .o_btn(o_min_mod)
     );
 
 
@@ -108,4 +107,6 @@ module watch_cu(
                 end 
             endcase
     end
+
+
 endmodule
