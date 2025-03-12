@@ -4,6 +4,7 @@ module stopwatch_cu(
                     input i_btn_run,
                     input i_btn_clear,
                     input sw_mod,
+                    output [1:0] led_mod,
                     output reg o_run,
                     output reg o_clear,
                     output reg o_mod
@@ -122,6 +123,8 @@ module stopwatch_cu(
             end 
         endcase
     end
+
+    assign led_mod = sw_mod ? 2'b10 : 2'b01;
 
 
 endmodule

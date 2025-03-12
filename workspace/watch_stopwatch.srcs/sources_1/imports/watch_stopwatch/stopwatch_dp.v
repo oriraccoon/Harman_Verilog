@@ -16,7 +16,7 @@ module stopwatch_dp(
     .rst(rst),
     .o_clk(o_clk)
     );
-    msec_counter msc(
+    stopwatch_msec_counter msc(
         .clk(o_clk),
         .rst(rst),
         .i_btn_run(i_btn_run),
@@ -24,21 +24,21 @@ module stopwatch_dp(
         .ms_counter(ms_counter),
         .ms_tick(ms_tick)
     );
-    sec_counter sc(
+    stopwatch_sec_counter sc(
         .rst(rst),
         .ms_tick(ms_tick),
         .i_btn_clear(i_btn_clear),
         .s_counter(s_counter),
         .s_tick(s_tick)
     );
-    min_counter mc(
+    stopwatch_min_counter mc(
         .rst(rst),
         .s_tick(s_tick),
         .i_btn_clear(i_btn_clear),
         .m_counter(m_counter),
         .m_tick(m_tick)
     );
-    hour_counter hc(
+    stopwatch_hour_counter hc(
         .rst(rst),
         .m_tick(m_tick),
         .i_btn_clear(i_btn_clear),
@@ -47,7 +47,7 @@ module stopwatch_dp(
 
 endmodule
 
-module msec_counter(
+module stopwatch_msec_counter(
                     input clk,
                     input rst,
                     input i_btn_run,
@@ -81,7 +81,7 @@ module msec_counter(
 
 endmodule
 
-module sec_counter (
+module stopwatch_sec_counter (
                     input rst,
                     input ms_tick,
                     input i_btn_clear,
@@ -110,7 +110,7 @@ module sec_counter (
     
 endmodule
 
-module min_counter(
+module stopwatch_min_counter(
                     input rst,
                     input s_tick,
                     input i_btn_clear,
@@ -139,7 +139,7 @@ module min_counter(
 
 endmodule
 
-module hour_counter(
+module stopwatch_hour_counter(
                     input rst,
                     input m_tick,
                     input i_btn_clear,

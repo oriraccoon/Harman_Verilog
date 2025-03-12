@@ -21,10 +21,12 @@
 
 
 module tb_stopwatch_dp();
-    reg clk, rst, w_run, w_clear;
+    reg clk, rst, w_run, w_clear, w_mod;
     wire [6:0] ms;
     wire [5:0] s, m;
     wire [4:0] h;
+    wire [7:0] seg_out;
+    wire [3:0] an;
 
 
 stopwatch_dp sd(
@@ -36,6 +38,19 @@ stopwatch_dp sd(
                     .s_counter(s),
                     .m_counter(m),
                     .h_counter(h)
+);
+
+fnd_ctrl fc(
+    .ms_counter(ms),
+    .s_counter(s),
+    .m_counter(m),
+    .h_counter(h),
+    .clk(clk),
+    .rst(rst),
+    .state(w_mod),
+    .stop_state(w_run),
+    .seg_out(seg_out),
+    .an(an)
 );
 
 always #1 clk=~clk;

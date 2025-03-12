@@ -1,4 +1,4 @@
-module fnd_ctrl(
+module watch_fnd_ctrl(
     input [$clog2(100) - 1:0] ms_counter,
     input [$clog2(60) - 1:0] s_counter,
     input [$clog2(60) - 1:0] m_counter,
@@ -6,7 +6,6 @@ module fnd_ctrl(
     input clk,
     input rst,
     input state,
-    input stop_state,
     output reg [7:0] seg_out,
     output reg [3:0] an
 );
@@ -30,10 +29,9 @@ module fnd_ctrl(
         .o_clk(o_clk)
     );
 
-    dp_blink db(
+    watch_dp_blink db(
         .clk(clk),
         .rst(rst),
-        .stop_state(stop_state),
         .dp(o_dp)
     );
 
@@ -120,10 +118,9 @@ end
 
 endmodule
 
-module dp_blink (
+module watch_dp_blink (
     input clk,
     input rst,
-    input stop_state,
     output reg dp
 );
 
@@ -140,16 +137,14 @@ module dp_blink (
             r_counter <= 0;
             dp <= 1'b1;
         end else begin
-            if(stop_state) begin
-                if(r_counter == FCOUNT - 1 ) begin // 500mHz
-                    r_counter <= 0;
-                    dp <= ~dp;
-                end else if(r_counter == FCOUNT - FCOUNT/4) begin
-                    dp <= ~dp;
-                    r_counter <= r_counter + 1;
-                end else begin
-                    r_counter <= r_counter + 1;
-                end
+            if(r_counter == FCOUNT - 1 ) begin // 500mHz
+                r_counter <= 0;
+                dp <= ~dp;
+            end else if(r_counter == FCOUNT - FCOUNT/4) begin
+                dp <= ~dp;
+                r_counter <= r_counter + 1;
+            end else begin
+                r_counter <= r_counter + 1;
             end
         end
     end

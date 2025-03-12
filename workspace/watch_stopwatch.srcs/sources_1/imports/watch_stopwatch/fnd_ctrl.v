@@ -1,4 +1,4 @@
-module fnd_ctrl(
+module stopwatch_fnd_ctrl(
     input [$clog2(100) - 1:0] ms_counter,
     input [$clog2(60) - 1:0] s_counter,
     input [$clog2(60) - 1:0] m_counter,
@@ -30,7 +30,7 @@ module fnd_ctrl(
         .o_clk(o_clk)
     );
 
-    dp_blink db(
+    stopwatch_dp_blink db(
         .clk(clk),
         .rst(rst),
         .stop_state(stop_state),
@@ -120,7 +120,7 @@ end
 
 endmodule
 
-module dp_blink (
+module stopwatch_dp_blink (
     input clk,
     input rst,
     input stop_state,
