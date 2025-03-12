@@ -66,7 +66,7 @@ Datapath_Unit U_Datapath_Unit(
     .btn_hour_cal(btn_run),
     .btn_sec_cal(btn_sec_cal),
     .btn_min_cal(btn_min_cal),
-    .o_pm_mod(o_pm_mod),
+    .o_pm_mod(pm_mod),
     .ms_counter(ms_counter),
     .s_counter(s_counter),
     .m_counter(m_counter),

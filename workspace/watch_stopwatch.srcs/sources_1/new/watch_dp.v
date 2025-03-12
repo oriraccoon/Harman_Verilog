@@ -14,9 +14,6 @@ module watch_dp(
     wire o_clk, ms_tick, s_tick, m_tick;
     wire w_sec_mod, w_min_mod, w_hour_mod;
 
-    wire [5:0] w_s_counter, w_m_counter;
-    wire [4:0] w_h_counter;
-
     clock_divider_100hz hhzd(
     .clk(clk),
     .rst(rst),
@@ -29,21 +26,24 @@ module watch_dp(
         .ms_tick(ms_tick)
     );
     watch_sec_counter sc(
+        .clk(o_clk),
         .rst(rst),
         .ms_tick(ms_tick),
-        .s_counter(w_s_counter),
+        .sec_mod(w_sec_mod),
+        .pm_mod(pm_mod),
+        .s_counter(s_counter),
         .s_tick(s_tick)
     );
     watch_min_counter mc(
         .rst(rst),
         .s_tick(s_tick),
-        .m_counter(w_m_counter),
+        .m_counter(m_counter),
         .m_tick(m_tick)
     );
     watch_hour_counter hc(
         .rst(rst),
         .m_tick(m_tick),
-        .h_counter(w_h_counter)
+        .h_counter(h_counter)
     );
 
     btn_edge_trigger U_btn_sec_D(
@@ -65,18 +65,6 @@ module watch_dp(
                         .o_btn(w_hour_mod)
     );
 
-    btn_cal bc(
-        .w_sec_mod(w_sec_mod),
-        .w_min_mod(w_hour_mod),
-        .w_hour_mod(w_hour_mod),
-        .pm_mod(pm_mod),
-        .w_s_counter(w_s_counter),
-        .w_m_counter(w_m_counter),
-        .w_h_counter(w_h_counter),
-        .s_counter(s_counter),
-        .m_counter(m_counter),
-        .h_counter(h_counter)
-    );
 
 endmodule
 
@@ -105,28 +93,46 @@ module watch_msec_counter(
 endmodule
 
 module watch_sec_counter (
+                    input clk,
                     input rst,
                     input ms_tick,
+                    input sec_mod,
+                    input pm_mod,
                     output reg [5:0] s_counter,
                     output reg s_tick
 );
 
-always @(posedge rst or posedge ms_tick) begin
-    if (rst) begin
-        s_counter <= 0;
-        s_tick <= 0;
-    end else begin
-        if (ms_tick) begin
-            if (s_counter == 59) begin
-                s_counter <= 0;
-                s_tick <= 1;
-            end else begin
-                s_counter <= s_counter + 1;
-                s_tick <= 0;
+    reg [5:0] w_s_counter;
+    reg [5:0] n_s_counter;
+
+    always @(posedge rst or posedge ms_tick) begin
+        if (rst) begin
+            w_s_counter <= 0;
+            s_tick <= 0;
+        end else begin
+            if (ms_tick) begin
+                if (w_s_counter >= 59) begin
+                    w_s_counter <= 0;
+                    s_tick <= 1;
+                end else begin
+                    w_s_counter <= w_s_counter + 1;
+                    s_tick <= 0;
+                end
             end
         end
     end
-end
+
+
+    always @(posedge clk or posedge sec_mod) begin
+        if(sec_mod) begin
+            case (pm_mod)
+                1'b0: n_s_counter <= w_s_counter + 1;
+                1'b1: n_s_counter <= w_s_counter - 1;
+            endcase
+        end else begin
+            s_counter <= w_s_counter;
+        end
+    end
 
     
 endmodule
@@ -183,34 +189,4 @@ module watch_hour_counter(
     end
 
 
-endmodule
-
-module btn_cal (
-    input w_sec_mod,
-    input w_min_mod,
-    input w_hour_mod,
-    input pm_mod,
-    input [5:0] w_s_counter,
-    input [5:0] w_m_counter,
-    input [4:0] w_h_counter,
-    output reg [5:0] s_counter,
-    output reg [5:0] m_counter,
-    output reg [4:0] h_counter
-);
-    always @(w_sec_mod or w_min_mod or w_hour_mod) begin
-        if(w_sec_mod) begin
-            if(pm_mod) s_counter = w_s_counter - 1;
-            else s_counter = w_s_counter + 1;
-        end else if(w_min_mod) begin
-            if(pm_mod) m_counter = w_m_counter - 1;
-            else m_counter = w_m_counter + 1;
-        end else if(w_hour_mod) begin
-            if(pm_mod) h_counter = w_h_counter - 1;
-            else h_counter = w_h_counter + 1;
-        end else begin
-            s_counter = w_s_counter;
-            m_counter = w_m_counter;
-            h_counter = w_h_counter;
-        end
-    end
 endmodule
