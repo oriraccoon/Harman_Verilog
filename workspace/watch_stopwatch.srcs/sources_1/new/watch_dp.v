@@ -27,21 +27,24 @@ module watch_dp(
     watch_sec_counter sc(
         .rst(rst),
         .ms_tick(ms_tick),
-        .i_btn_clear(i_btn_clear),
+        .pm_mod(pm_mod),
+        .sec_mod(sec_mod),
         .s_counter(s_counter),
         .s_tick(s_tick)
     );
     watch_min_counter mc(
         .rst(rst),
         .s_tick(s_tick),
-        .i_btn_clear(i_btn_clear),
+        .pm_mod(pm_mod),
+        .min_mod(min_mod),
         .m_counter(m_counter),
         .m_tick(m_tick)
     );
     watch_hour_counter hc(
         .rst(rst),
         .m_tick(m_tick),
-        .i_btn_clear(i_btn_clear),
+        .pm_mod(pm_mod),
+        .hour_mod(hour_mod),
         .h_counter(h_counter)
     );
 
@@ -81,30 +84,27 @@ module watch_sec_counter (
                     output reg s_tick
 );
 
-    always @(posedge rst or posedge ms_tick) begin
-        if(rst) begin
-            s_counter <= 0;
-        end else begin
-            if(ms_tick) begin
-                if(s_counter == 59) begin
-                    s_counter <= 0;
-                    s_tick <= 1;
-                end
-                else begin
-                    s_counter <= s_counter + 1;
-                    s_tick <= 0;
-                end
-            end
-        end
-    end
-
-    always @(posedge sec_mod) begin
+always @(posedge rst or posedge ms_tick or posedge sec_mod) begin
+    if (rst) begin
+        s_counter <= 0;
+        s_tick <= 0;
+    end else if (sec_mod) begin
         if (pm_mod) begin
             s_counter <= s_counter - 1;
-        end else if(pm_mod == 0) begin
+        end else begin
             s_counter <= s_counter + 1;
         end
+    end else if (ms_tick) begin
+        if (s_counter == 59) begin
+            s_counter <= 0;
+            s_tick <= 1;
+        end else begin
+            s_counter <= s_counter + 1;
+            s_tick <= 0;
+        end
     end
+end
+
     
 endmodule
 
@@ -117,30 +117,27 @@ module watch_min_counter(
                     output reg m_tick
 );
 
-    always @(posedge rst or posedge s_tick) begin
-        if(rst) begin
+    always @(posedge rst or posedge s_tick or posedge min_mod) begin
+        if (rst) begin
             m_counter <= 0;
-        end else begin
-            if(s_tick) begin
-                if(m_counter == 59) begin
-                    m_counter <= 0;
-                    m_tick = 1;
-                end
-                else begin
-                    m_counter <= m_counter + 1;
-                    m_tick <= 0;
-                end
+            m_tick <= 0;
+        end else if (min_mod) begin
+            if (pm_mod) begin
+                m_counter <= m_counter - 1;
+            end else begin
+                m_counter <= m_counter + 1;
+            end
+        end else if (s_tick) begin
+            if (m_counter == 59) begin
+                m_counter <= 0;
+                m_tick <= 1;
+            end else begin
+                m_counter <= m_counter + 1;
+                m_tick <= 0;
             end
         end
     end
 
-    always @(posedge min_mod) begin
-        if (pm_mod) begin
-            m_counter <= m_counter - 1;
-        end else if(pm_mod == 0) begin
-            m_counter <= m_counter + 1;
-        end
-    end
 
 endmodule
 
@@ -152,25 +149,23 @@ module watch_hour_counter(
                     output reg [4:0] h_counter
 );
 
-    always @(posedge rst or posedge m_tick) begin
-        if(rst) begin
+    always @(posedge rst or posedge m_tick or posedge hour_mod) begin
+        if (rst) begin
             h_counter <= 0;
-        end else begin
-            if(m_tick) begin
-                if(h_counter == 23) begin
-                    h_counter <= 0;
-                end
-                else h_counter <= h_counter + 1;
+        end else if (hour_mod) begin
+            if (pm_mod) begin
+                h_counter <= h_counter - 1;
+            end else begin
+                h_counter <= h_counter + 1;
+            end
+        end else if (m_tick) begin
+            if (h_counter == 23) begin
+                h_counter <= 0;
+            end else begin
+                h_counter <= h_counter + 1;
             end
         end
     end
 
-    always @(posedge hour_mod) begin
-        if (pm_mod) begin
-            h_counter <= h_counter - 1;
-        end else if(pm_mod == 0) begin
-            h_counter <= h_counter + 1;
-        end
-    end
 
 endmodule

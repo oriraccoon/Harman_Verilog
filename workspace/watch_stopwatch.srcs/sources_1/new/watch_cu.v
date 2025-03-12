@@ -7,8 +7,6 @@ module watch_cu(
                     input sw_mod,
                     input w_mod,
                     input pm_mod,
-                    output [1:0] led_mod,
-                    output [1:0] pm_led_mod,
                     output reg o_sec_mod,
                     output reg o_min_mod,
                     output reg o_hour_mod,
@@ -46,15 +44,13 @@ module watch_cu(
     reg pm_state, pm_next;
 
     always @(posedge clk or posedge rst) begin
-        if(w_mod == 1) begin
-            if(rst) begin
-                mod_state <= MSEC_SEC_MOD1;
-                pm_state <= ADD_MOD;
-            end
-            else begin
-                mod_state <= mod_next;
-                pm_state <= pm_next;
-            end
+        if(rst) begin
+            mod_state <= MSEC_SEC_MOD1;
+            pm_state <= ADD_MOD;
+        end
+        else if (w_mod == 1) begin
+            mod_state <= mod_next;
+            pm_state <= pm_next;
         end
     end
 
@@ -120,8 +116,4 @@ module watch_cu(
             endcase
         end
     end
-
-    assign led_mod = sw_mod ? 2'b10 : 2'b01;
-    assign pm_led_mod = pm_mod ? 2'b10 : 2'b01;
-
 endmodule

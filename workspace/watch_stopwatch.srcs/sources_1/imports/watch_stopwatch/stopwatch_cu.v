@@ -5,7 +5,6 @@ module stopwatch_cu(
                     input i_btn_clear,
                     input sw_mod,
                     input w_mod,
-                    output [1:0] led_mod,
                     output reg o_run,
                     output reg o_clear,
                     output reg o_mod
@@ -34,24 +33,22 @@ module stopwatch_cu(
     reg mod_state, mod_next;
 
     always @(posedge clk or posedge rst) begin
-        if(w_mod == 0) begin
-            if(rst) begin
-                state <= STOP;
-                mod_state <= MOD1;
-                prev <= STOP;
-            end
-            else begin
-                if(next != CLEAR) prev <= state;
-                state <= next;
-                mod_state <= mod_next;
-            end
+        if(rst) begin
+            state <= STOP;
+            mod_state <= MOD1;
+            prev <= STOP;
         end
+        else if (w_mod == 0) begin
+            if(next != CLEAR) prev <= state;
+            state <= next;
+            mod_state <= mod_next;
+        end
+        
     end
 
 
 
     always @(*) begin
-        if(w_mod == 0) begin
             next = state;
             case (state)
                 STOP:begin
@@ -76,11 +73,10 @@ module stopwatch_cu(
                         end
                     end
             endcase
-        end
+        
     end
 
     always @(*) begin
-        if(w_mod == 0) begin
             mod_next = mod_state;
             case (mod_state)
                 MOD1: if(sw_mod) begin
@@ -90,11 +86,10 @@ module stopwatch_cu(
                     mod_next = MOD1;
                 end
             endcase
-        end
+        
     end
 
     always @(*) begin
-        if(w_mod == 0) begin
             o_run = 0;
             o_clear = 0;
             case (state)
@@ -112,11 +107,10 @@ module stopwatch_cu(
                     else if(prev == RUN) o_run = 1'b1;
                 end 
             endcase
-        end
+        
     end
 
     always @(*) begin
-        if(w_mod == 0) begin
             o_mod = 0;
             case (mod_state)
                 MOD1:begin
@@ -126,10 +120,9 @@ module stopwatch_cu(
                     o_mod = 1'b1;
                 end 
             endcase
-        end
+        
     end
 
-    assign led_mod = sw_mod ? 2'b10 : 2'b01;
 
 
 endmodule

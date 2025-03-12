@@ -44,8 +44,21 @@ watch_fnd_ctrl U_watch_fnd_ctrl(
                     .an(watch_fnd_comm)
 );
 
-assign fnd_font = w_mod ? watch_fnd_font : stopwatch_fnd_font;
-assign fnd_comm = w_mod ? watch_fnd_comm : stopwatch_fnd_comm;
+reg w_mod_sync1, w_mod_sync2;
+
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        w_mod_sync1 <= 0;
+        w_mod_sync2 <= 0;
+    end else begin
+        w_mod_sync1 <= w_mod;
+        w_mod_sync2 <= w_mod_sync1;
+    end
+end
+
+assign fnd_font = w_mod_sync2 ? watch_fnd_font : stopwatch_fnd_font;
+assign fnd_comm = w_mod_sync2 ? watch_fnd_comm : stopwatch_fnd_comm;
+
 
 
 endmodule
