@@ -16,16 +16,22 @@ Write-Host "Vivado Closed. Checking for modified projects..."
 # 수정된 날짜가 오늘인 폴더 찾기
 $modifiedProjects = Get-ChildItem -Path $vivadoWorkspace -Directory | Where-Object {
     ($_.LastWriteTime.Date -eq (Get-Date).Date)
-} | ForEach-Object { $_.Name }
+}
 
 foreach ($project in $modifiedProjects) {
+    $projectName = $project.Name
     $srcPath = "$vivadoWorkspace\$project\$project.srcs"
     $destPath = "$gitWorkspace\$project.srcs"
 
     if (Test-Path $srcPath) {
-        Write-Host "Detected Changed Project: $project"
+        Write-Host "Detected Changed Project: $projectName"
         Copy-Item -Path $srcPath -Destination $gitWorkspace -Recurse -Force
     }
+}
+
+# 만약 수정된 프로젝트가 없으면 메시지 출력
+if ($modifiedProjects.Count -eq 0) {
+    Write-Host "Nothing has changed"
 }
 
 Write-Host "Git Auto Commit & Push Start!!"
