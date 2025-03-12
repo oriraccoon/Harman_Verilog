@@ -23,7 +23,7 @@ foreach ($project in $modifiedProjects) {
     $destPath = "$gitWorkspace\$project.srcs"
 
     if (Test-Path $srcPath) {
-        Write-Host "수정된 프로젝트 감지: $project"
+        Write-Host "Detected Changed Project: $project"
         Copy-Item -Path $srcPath -Destination $gitWorkspace -Recurse -Force
     }
 }
