@@ -15,7 +15,7 @@ Write-Host "Vivado Closed. Checking for modified projects..."
 
 # 수정된 날짜가 오늘인 폴더 찾기
 $modifiedProjects = Get-ChildItem -Path $vivadoWorkspace -Directory | Where-Object {
-    ($_.LastWriteTime.Date -eq (Get-Date $today))
+    $_.LastWriteTime.Date -eq (Get-Date $today).Date
 }
 
 foreach ($project in $modifiedProjects) {
