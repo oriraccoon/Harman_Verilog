@@ -12,9 +12,6 @@ module Control_Unit(
                     output o_clear,
                     output o_mod_stopwatch,
                     output o_mod_watch,
-                    output o_sec_mod,
-                    output o_min_mod,
-                    output o_hour_mod,
                     output o_pm_mod
     );
 // pm mod 는 w_mod가 1일때만 -> 어차피 watch cu에서 조작하면 되니까 상관 없음
@@ -40,9 +37,6 @@ watch_cu U_watch_cu(
                             .sw_mod(sw_mod),
                             .w_mod(w_mod),
                             .pm_mod(pm_mod),
-                            .o_sec_mod(o_sec_mod),
-                            .o_min_mod(o_min_mod),
-                            .o_hour_mod(o_hour_mod),
                             .o_mod(o_mod_watch),
                             .o_pm_mod(o_pm_mod)
 );

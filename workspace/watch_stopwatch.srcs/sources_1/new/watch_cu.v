@@ -7,38 +7,13 @@ module watch_cu(
                     input sw_mod,
                     input w_mod,
                     input pm_mod,
-                    output o_sec_mod,
-                    output o_min_mod,
-                    output o_hour_mod,
                     output reg o_mod,
                     output reg o_pm_mod
 );
 
-
-    btn_edge_trigger U_btn_hour(
-                        .clk(clk),
-                        .rst(rst),
-                        .i_btn(i_btn_run),
-                        .o_btn(o_hour_mod)
-    );
-    btn_edge_trigger U_btn_sec(
-                        .clk(clk),
-                        .rst(rst),
-                        .i_btn(i_btn_sec_cal),
-                        .o_btn(o_sec_mod)
-    );
-    btn_edge_trigger U_btn_min(
-                        .clk(clk),
-                        .rst(rst),
-                        .i_btn(i_btn_min_cal),
-                        .o_btn(o_min_mod)
-    );
-
-
-
-
     parameter MSEC_SEC_MOD1 = 0, MIN_HOUR_MOD2 = 1, ADD_MOD = 0, MINUS_MOD = 1;
 
+    reg state, next;
     reg mod_state, mod_next;
     reg pm_state, pm_next;
 
@@ -77,11 +52,6 @@ module watch_cu(
                 end 
             endcase
     end
-
-
-
-
-
 
 // sw_mod 동작
     always @(*) begin

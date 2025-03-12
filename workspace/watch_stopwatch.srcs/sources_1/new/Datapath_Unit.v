@@ -3,16 +3,16 @@ module Datapath_Unit (
     input rst,
     input o_run,
     input o_clear,
-    input o_sec_mod,
-    input o_min_mod,
-    input o_hour_mod,
+    input btn_sec_cal,
+    input btn_min_cal,
+    input btn_hour_cal,
     input o_pm_mod,
-    input [6:0] ms_counter,
-    input [5:0] s_counter, m_counter,
-    input [4:0] h_counter,
-    input [6:0] w_ms_counter,
-    input [5:0] w_s_counter, w_m_counter,
-    input [4:0] w_h_counter
+    output [6:0] ms_counter,
+    output [5:0] s_counter, m_counter,
+    output [4:0] h_counter,
+    output [6:0] w_ms_counter,
+    output [5:0] w_s_counter, w_m_counter,
+    output [4:0] w_h_counter
 );
     
 stopwatch_dp U_stopwatch_dp(
@@ -28,9 +28,9 @@ stopwatch_dp U_stopwatch_dp(
 watch_dp U_watch_dp(
                     .clk(clk),
                     .rst(rst),
-                    .sec_mod(o_sec_mod),
-                    .min_mod(o_min_mod),
-                    .hour_mod(o_hour_mod),
+                    .sec_mod(btn_sec_cal),
+                    .min_mod(btn_min_cal),
+                    .hour_mod(btn_hour_cal),
                     .pm_mod(o_pm_mod),
                     .ms_counter(w_ms_counter),
                     .s_counter(w_s_counter),
