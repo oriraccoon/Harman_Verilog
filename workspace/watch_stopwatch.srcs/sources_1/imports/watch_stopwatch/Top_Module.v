@@ -63,49 +63,24 @@ Fnd_Ctrl_Unit U_Fnd_ctrl_Unit(
                     .fnd_comm(fnd_comm)
 );
 
-/*
 Datapath_Unit U_Datapath_Unit(
-    clk(clk),
-    rst(rst),
-    o_run(o_run),
-    o_clear(o_clear),
-    o_sec_mod(o_sec_mod),
-    o_min_mod(o_min_mod),
-    o_hour_mod(o_hour_mod),
-    o_pm_mod(o_pm_mod),
-    .ms_counter(),
-    .s_counter(),
-    .m_counter(),
-    .h_counter(),
-    .w_ms_counter(),
-    .w_s_counter(),
-    .w_m_counter(),
-    .w_h_counter()
-);*/
-
-stopwatch_dp U_stopwatch_dp(
-                    .clk(clk),
-                    .rst(rst),
-                    .i_btn_run(o_run),
-                    .i_btn_clear(o_clear),
-                    .ms_counter(ms_counter),
-                    .s_counter(s_counter),
-                    .m_counter(m_counter),
-                    .h_counter(h_counter)
+    .clk(clk),
+    .rst(rst),
+    .o_run(o_run),
+    .o_clear(o_clear),
+    .o_sec_mod(o_sec_mod),
+    .o_min_mod(o_min_mod),
+    .o_hour_mod(o_hour_mod),
+    .o_pm_mod(o_pm_mod),
+    .ms_counter(ms_counter),
+    .s_counter(s_counter),
+    .m_counter(m_counter),
+    .h_counter(h_counter),
+    .w_ms_counter(w_ms_counter),
+    .w_s_counter(w_s_counter),
+    .w_m_counter(w_m_counter),
+    .w_h_counter(w_h_counter)
 );
-watch_dp U_watch_dp(
-                    .clk(clk),
-                    .rst(rst),
-                    .sec_mod(o_sec_mod),
-                    .min_mod(o_min_mod),
-                    .hour_mod(o_hour_mod),
-                    .pm_mod(o_pm_mod),
-                    .ms_counter(w_ms_counter),
-                    .s_counter(w_s_counter),
-                    .m_counter(w_m_counter),
-                    .h_counter(w_h_counter)
-);
-
 
 reg [5:0] led_mod_reg;
 always @(posedge clk or posedge rst) begin

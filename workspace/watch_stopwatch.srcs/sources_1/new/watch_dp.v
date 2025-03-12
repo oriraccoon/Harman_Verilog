@@ -151,7 +151,7 @@ module watch_hour_counter(
 
     always @(posedge rst or posedge m_tick or posedge hour_mod) begin
         if (rst) begin
-            h_counter <= 0;
+            h_counter <= 12;
         end else if (hour_mod) begin
             if (pm_mod) begin
                 h_counter <= h_counter - 1;

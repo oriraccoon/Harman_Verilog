@@ -56,7 +56,6 @@ module watch_cu(
 
 // pm_mod 동작
     always @(*) begin
-        if(w_mod == 1) begin
             pm_next = pm_state;
             case (mod_state)
                 ADD_MOD: if(pm_mod) begin
@@ -66,11 +65,9 @@ module watch_cu(
                     pm_next = ADD_MOD;
                 end
             endcase
-        end
     end
 
     always @(*) begin
-        if(w_mod == 1) begin
             o_pm_mod = 0;
             case (mod_state)
                 ADD_MOD:begin
@@ -80,7 +77,6 @@ module watch_cu(
                     o_pm_mod = 1'b1;
                 end 
             endcase
-        end
     end
 
 
@@ -90,7 +86,6 @@ module watch_cu(
 
 // sw_mod 동작
     always @(*) begin
-        if(w_mod == 1) begin
             mod_next = mod_state;
             case (mod_state)
                 MSEC_SEC_MOD1: if(sw_mod) begin
@@ -100,11 +95,9 @@ module watch_cu(
                     mod_next = MSEC_SEC_MOD1;
                 end
             endcase
-        end
     end
 
     always @(*) begin
-        if(w_mod == 1) begin
             o_mod = 0;
             case (mod_state)
                 MSEC_SEC_MOD1:begin
@@ -114,6 +107,5 @@ module watch_cu(
                     o_mod = 1'b1;
                 end 
             endcase
-        end
     end
 endmodule
