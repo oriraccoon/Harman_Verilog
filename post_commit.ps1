@@ -1,20 +1,41 @@
 $repoPath = "C:\Users\kccistc\Documents\GitHub\Harman_Verilog"  # 로컬 레포지토리 경로
 $gitExe = "C:\Program Files\Git\bin\git.exe"   # Git 실행 파일 경로
 $vivadoPath = "C:\Xilinx\Vivado\2020.2\bin\vivado.bat"  # Vivado 실행 경로
-$vivadoProcess = "vivado.exe"  # Vivado 프로세스 이름
+$vivadoWorkspace = "$env:USERPROFILE\Desktop\workspace"
+$gitWorkspace = "$repoPath\workspace"
+
+# 오늘 날짜 가져오기 (yyyy-MM-dd 형식)
+$today = Get-Date -Format "yyyy-MM-dd"
 
 # Vivado 실행
 Write-Host "Vivado 2020.2 Start!!"
 Start-Process -FilePath $vivadoPath -NoNewWindow -Wait
 
-Write-Host "Vivado Closed. Git Auto Commit & Push Start!!"
+Write-Host "Vivado Closed. Checking for modified projects..."
+
+# 수정된 날짜가 오늘인 폴더 찾기
+$modifiedProjects = Get-ChildItem -Path $vivadoWorkspace -Directory | Where-Object {
+    ($_.LastWriteTime.Date -eq (Get-Date).Date)
+} | ForEach-Object { $_.Name }
+
+foreach ($project in $modifiedProjects) {
+    $srcPath = "$vivadoWorkspace\$project\$project.srcs"
+    $destPath = "$gitWorkspace\$project.srcs"
+
+    if (Test-Path $srcPath) {
+        Write-Host "수정된 프로젝트 감지: $project"
+        Copy-Item -Path $srcPath -Destination $gitWorkspace -Recurse -Force
+    }
+}
+
+Write-Host "Git Auto Commit & Push Start!!"
 
 # Git 커밋 및 푸시 수행
 Set-Location -Path $repoPath
 
 # 현재 시간 포맷 (예: 2025-03-06 15:30)
 $currentTime = Get-Date -Format "yyyy-MM-dd HH:mm"
-$commitMessage = "Auto commit after Vivado closed at $currentTime"
+$commitMessage = "Auto commit for modified projects on $currentTime"
 
 & $gitExe add .
 & $gitExe commit -m $commitMessage
