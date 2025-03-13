@@ -12,7 +12,10 @@ module Control_Unit(
                     output o_clear,
                     output o_mod_stopwatch,
                     output o_mod_watch,
-                    output o_pm_mod
+                    output o_pm_mod,
+                    output signed [5:0] o_sec_detect,
+                    output signed [5:0] o_min_detect,
+                    output signed [5:0] o_hour_detect
     );
 // pm mod 는 w_mod가 1일때만 -> 어차피 watch cu에서 조작하면 되니까 상관 없음
 // w_mod가 1이면 -> 버튼은 초분시 증감 // w_mod가 0이면 -> 시작 클리어(나머지 동작 x)
@@ -38,7 +41,10 @@ watch_cu U_watch_cu(
                             .w_mod(w_mod),
                             .pm_mod(pm_mod),
                             .o_mod(o_mod_watch),
-                            .o_pm_mod(o_pm_mod)
+                            .o_pm_mod(o_pm_mod),
+                            .o_sec_detect(o_sec_detect),
+                            .o_min_detect(o_min_detect),
+                            .o_hour_detect(o_hour_detect)
 );
 
 endmodule
