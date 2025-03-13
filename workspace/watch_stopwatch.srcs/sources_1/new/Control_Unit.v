@@ -12,7 +12,6 @@ module Control_Unit(
                     output o_clear,
                     output o_mod_stopwatch,
                     output o_mod_watch,
-                    output o_pm_mod,
                     output signed [5:0] o_sec_detect,
                     output signed [5:0] o_min_detect,
                     output signed [5:0] o_hour_detect
@@ -41,7 +40,6 @@ watch_cu U_watch_cu(
                             .w_mod(w_mod),
                             .pm_mod(pm_mod),
                             .o_mod(o_mod_watch),
-                            .o_pm_mod(o_pm_mod),
                             .o_sec_detect(o_sec_detect),
                             .o_min_detect(o_min_detect),
                             .o_hour_detect(o_hour_detect)

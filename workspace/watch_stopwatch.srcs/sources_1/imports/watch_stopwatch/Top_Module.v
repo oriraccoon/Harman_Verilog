@@ -14,7 +14,7 @@ module Top_Module(
 );
 
 wire o_run, o_clear, o_mod_stopwatch;
-wire o_mod_watch, o_sec_mod, o_min_mod, o_hour_mod, o_pm_mod;
+wire o_mod_watch, o_sec_mod, o_min_mod, o_hour_mod;
 wire [6:0] ms_counter;
 wire [5:0] s_counter, m_counter;
 wire [4:0] h_counter;
@@ -38,7 +38,6 @@ Control_Unit U_Control_Unit(
                     .o_clear(o_clear),
                     .o_mod_stopwatch(o_mod_stopwatch),
                     .o_mod_watch(o_mod_watch),
-                    .o_pm_mod(o_pm_mod),
                     .o_sec_detect(o_sec_detect),
                     .o_min_detect(o_min_detect),
                     .o_hour_detect(o_hour_detect)
@@ -73,7 +72,6 @@ Datapath_Unit U_Datapath_Unit(
     .btn_hour_cal(o_hour_detect),
     .btn_sec_cal(o_sec_detect),
     .btn_min_cal(o_min_detect),
-    .o_pm_mod(o_pm_mod),
     .ms_counter(ms_counter),
     .s_counter(s_counter),
     .m_counter(m_counter),

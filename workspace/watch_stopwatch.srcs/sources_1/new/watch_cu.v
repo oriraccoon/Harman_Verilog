@@ -8,7 +8,6 @@ module watch_cu(
                     input w_mod,
                     input pm_mod,
                     output reg o_mod,
-                    output reg o_pm_mod,
                     output signed [5:0] o_sec_detect,
                     output signed [5:0] o_min_detect,
                     output signed [5:0] o_hour_detect
@@ -70,17 +69,7 @@ module watch_cu(
             endcase
     end
 
-    always @(*) begin
-            o_pm_mod = 0;
-            case (pm_state)
-                ADD_MOD:begin
-                    o_pm_mod = 1'b0;
-                end
-                MINUS_MOD:begin
-                    o_pm_mod = 1'b1;
-                end 
-            endcase
-    end
+
 
     always @(*) begin
         sec_detect = 0;
