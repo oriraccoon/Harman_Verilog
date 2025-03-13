@@ -1,9 +1,12 @@
+
+
+
 module watch_dp (
     input clk,
     input rst,
-    input signed [5:0] sec_mod,
-    input signed [5:0] min_mod,
-    input signed [5:0] hour_mod,
+    input signed [1:0] sec_mod,
+    input signed [1:0] min_mod,
+    input signed [1:0] hour_mod,
     output [6:0] ms_counter,
     output [5:0] s_counter,
     output [5:0] m_counter,
@@ -19,209 +22,144 @@ module watch_dp (
         .rst  (rst),
         .o_clk(o_clk)
     );
-    watch_msec_counter msc (
-        .clk(o_clk),
-        .rst(rst),
-        .ms_counter(ms_counter),
-        .ms_tick(ms_tick)
-    );
 
-
-    watch_sec_counter sc (
-        .clk(o_clk),
-        .rst(rst),
-        .ms_tick(ms_tick),
-        .sec_tick(sec_tick),
-        .mod_counter(sec_mod),
-        .s_counter(s_counter),
-        .s_tick(s_tick)
-    );
-
-
-
-    watch_min_counter mc (
-        .clk(o_clk),
-        .rst(rst),
-        .s_tick(s_tick),
-        .min_tick(min_tick),
-        .mod_counter(min_mod),
-        .m_counter(m_counter),
-        .m_tick(m_tick)
-    );
-
-    watch_hour_counter hc (
-        .clk(o_clk),
-        .rst(rst),
-        .m_tick(m_tick),
-        .hour_tick(hour_tick),
-        .mod_counter(hour_mod),
-        .h_counter(h_counter)
-    );
-
-mod_counter_tick_generator sec_tick_gen(
+    watch_time_counter #(.TICK_COUNT(100), .BIT_WIDTH(7)) U_time_msec( 
     .clk(clk),
     .rst(rst),
-    .mod_counter(sec_mod),
-    .m_tick(sec_tick)
+    .btn_tick(1'b0),
+    .tick(o_clk),
+    .o_time(ms_counter),
+    .o_tick(ms_tick)
+    );
+    watch_time_counter #(.TICK_COUNT(60), .BIT_WIDTH(6)) U_time_sec( 
+    .clk(clk),
+    .rst(rst),
+    .btn_tick(sec_tick),
+    .mod_val(sec_mod),
+    .tick(ms_tick),
+    .o_time(s_counter),
+    .o_tick(s_tick)
+    );
+    watch_time_counter #(.TICK_COUNT(60), .BIT_WIDTH(6)) U_time_min( 
+    .clk(clk),
+    .rst(rst),
+    .btn_tick(min_tick),
+    .mod_val(min_mod),
+    .tick(s_tick),
+    .o_time(m_counter),
+    .o_tick(m_tick)
+    );
+    watch_time_counter #(.TICK_COUNT(24), .BIT_WIDTH(5)) U_time_hour( 
+    .clk(clk),
+    .rst(rst),
+    .btn_tick(hour_tick),
+    .mod_val(hour_mod),
+    .tick(m_tick),
+    .o_time(h_counter),
+    );
+
+
+mod_val_tick_generator sec_tick_gen(
+    .clk(clk),
+    .rst(rst),
+    .mod_val(sec_mod),
+    .m_tick(sec_tick1)
 );
-mod_counter_tick_generator min_tick_gen(
+mod_val_tick_generator min_tick_gen(
     .clk(clk),
     .rst(rst),
-    .mod_counter(min_mod),
-    .m_tick(min_tick)
+    .mod_val(min_mod),
+    .m_tick(min_tick1)
 );
-mod_counter_tick_generator hour_tick_gen(
+mod_val_tick_generator hour_tick_gen(
     .clk(clk),
     .rst(rst),
-    .mod_counter(hour_mod),
+    .mod_val(hour_mod),
     .m_tick(hour_tick)
 );
 
 endmodule
 
-module watch_msec_counter (
+
+module watch_time_counter #(parameter TICK_COUNT = 100, BIT_WIDTH = 7) (
     input clk,
     input rst,
-    output reg [6:0] ms_counter,
-    output reg ms_tick
+    input i_tick, // 100 ms가 됐을 때
+    input btn_tick_tick, // 합 차 값이 변경됐을 때 틱
+    input signed [1:0] mod_val, // 합 차 값
+    output reg [BIT_WIDTH-1:0] o_time_counter,
+    output reg o_tick // 60초가 됐을 때 틱
 );
 
+    //parameter TICK_COUNT = 60;
+    reg [$clog2(TICK_COUNT -1) : 0] count_reg, count_next;
+    reg tick_reg, tick_next; //출력용
 
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            ms_counter <= 0;
-        end else begin
-            if (ms_counter == 99) begin
-                ms_counter <= 0;
-                ms_tick <= 1;
-            end else begin
-                ms_counter <= ms_counter + 1;
-                ms_tick <= 0;
-            end
+    assign o_time_counter = count_reg;
+    assign o_tick = tick_reg;
+
+    always@(posedge clk, posedge rst) begin
+    
+        if(rst) begin
+            count_reg <= 0;
+            tick_reg <= 0;
         end
-    end
-
-
-
-endmodule
-
-module watch_sec_counter (
-    input clk,
-    input rst,
-    input ms_tick, // 100 ms가 됐을 때
-    input sec_tick, // 합 차 값이 변경됐을 때 틱
-    input signed [5:0] mod_counter, // 합 차 값
-    output reg [5:0] s_counter,
-    output reg s_tick // 60초가 됐을 때 틱
-);
-
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            s_counter <= 0;
-        end else begin
-            if(ms_tick) begin
-                if(s_counter >= 59) begin
-                    s_counter = 0;
-                    s_tick = 1;
-                end else begin
-                    s_counter = s_counter + 1;
-                    s_tick = 0;
-                end
-            end else if(sec_tick) begin
-                s_counter = s_counter + mod_counter;
-                if(s_counter > 59) begin
-                    s_counter = 0;
-                    s_tick = 1;
-                end
-            end
-        end
-    end
-
-
-endmodule
-
-module watch_min_counter (
-    input clk,
-    input rst,
-    input s_tick,
-    input min_tick,
-    input signed [5:0] mod_counter,
-    output reg [5:0] m_counter,
-    output reg m_tick
-);
-
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            m_counter = 0;
-        end else begin
-            if(s_tick) begin
-                if(m_counter >= 59) begin
-                    m_counter = 0;
-                    m_tick = 1;
-                end else begin
-                    m_counter = m_counter + 1;
-                    m_tick = 0;
-                end
-            end else if(min_tick) begin
-                m_counter = m_counter + mod_counter;
-                if(m_counter > 59) begin
-                    m_counter = 0;
-                    m_tick = 1;
-                end
-            end
-        end
-    end
-
-endmodule
-
-module watch_hour_counter (
-    input clk,
-    input rst,
-    input m_tick,
-    input hour_tick,
-    input signed [5:0] mod_counter,
-    output reg [4:0] h_counter
-);
-
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            h_counter <= 12;
-        end else begin
-            if(m_tick) begin
-                if (h_counter >= 23) h_counter = 12;
-                else begin
-                    h_counter = h_counter + 1;
-                end
-            end else if(hour_tick) begin
-                    h_counter = h_counter + mod_counter;
-                    if(h_counter > 23) h_counter = 12;
-            end
+        else begin
+            count_reg <= count_next;
+            tick_reg <= tick_next;
         end
         
     end
 
+    always @(*) begin
+        count_next = count_reg;
+        tick_next = 0;  
+        if(btn_tick_tick) begin
+            if(count_reg == TICK_COUNT -1)begin
+                count_next = 0;
+                tick_next = 1'b1;
+            end
+            else begin
+                count_next = count_reg + mod_val;
+                tick_next = 1'b0;
+            end
+        end if(i_tick) begin
+                if(count_reg == TICK_COUNT -1)begin
+                    count_next = 0;
+                    tick_next = 1'b1;
+                end
+                else begin
+                    count_next = count_reg + 1;
+                    tick_next = 1'b0;
+                end
+        end
+    
+    end
+
+
 endmodule
 
-module mod_counter_tick_generator (
+
+module mod_val_tick_generator (
     input clk,
     input rst,
-    input signed [5:0] mod_counter,
+    input signed [1:0] mod_val,
     output reg m_tick
 );
 
-    reg signed [5:0] prev_mod_counter;
+    reg signed [5:0] 1rev_mod_val;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            prev_mod_counter <= 0;
+            1rev_mod_val <= 0;
             m_tick <= 0;
         end else begin
-            if (mod_counter != prev_mod_counter) begin
+        1if (mod_val != 1rev_mod_val) begin
                 m_tick <= 1;
             end else begin
                 m_tick <= 0;
             end
-            prev_mod_counter <= mod_counter;
+            1rev_mod_va1 <= mod_val;
         end
     end
 

@@ -21,9 +21,9 @@ wire [4:0] h_counter;
 wire [6:0] w_ms_counter;
 wire [5:0] w_s_counter, w_m_counter;
 wire [4:0] w_h_counter;
-wire signed [5:0] o_sec_detect;
-wire signed [5:0] o_min_detect;
-wire signed [5:0] o_hour_detect;
+wire signed [1:0] o_sec_detect;
+wire signed [1:0] o_min_detect;
+wire signed [1:0] o_hour_detect;
 Control_Unit U_Control_Unit(
                     .clk(clk),
                     .rst(rst),

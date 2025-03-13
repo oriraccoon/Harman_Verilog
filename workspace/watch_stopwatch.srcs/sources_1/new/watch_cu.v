@@ -8,9 +8,9 @@ module watch_cu(
                     input w_mod,
                     input pm_mod,
                     output reg o_mod,
-                    output signed [5:0] o_sec_detect,
-                    output signed [5:0] o_min_detect,
-                    output signed [5:0] o_hour_detect
+                    output signed [1:0] o_sec_detect,
+                    output signed [1:0] o_min_detect,
+                    output signed [1:0] o_hour_detect
 );
 
     parameter MSEC_SEC_MOD1 = 0, MIN_HOUR_MOD2 = 1, ADD_MOD = 0, MINUS_MOD = 1;
