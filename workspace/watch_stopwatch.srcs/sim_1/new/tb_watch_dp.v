@@ -28,8 +28,16 @@ initial begin
 
     // 버튼 누르기 (디바운스 고려)
     #2000000 
-    btn_hour = 1;  // 200us(0.2ms) 동안 버튼 누름
+    btn_hour = 0;  // 200us(0.2ms) 동안 버튼 누름
     btn_min = 1;
+    btn_sec = 0;
+    #2000000 
+    btn_hour = 1;  // 버튼 떼기
+    btn_min = 0;
+    btn_sec = 0;
+    #2000000 
+    btn_hour = 0;  // 버튼 떼기
+    btn_min = 0;
     btn_sec = 1;
     #2000000 
     btn_hour = 0;  // 버튼 떼기
