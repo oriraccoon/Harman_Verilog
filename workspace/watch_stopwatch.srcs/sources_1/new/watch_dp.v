@@ -46,7 +46,7 @@ module watch_dp (
     .o_time_counter(m_counter),
     .o_tick(m_tick)
     );
-    watch_time_counter #(.TICK_COUNT(24), .BIT_WIDTH(5), .DEFAULT_VAL(12)) U_time_hour( 
+    watch_time_counter #(.TICK_COUNT(24), .BIT_WIDTH(5), .START_VAL(12)) U_time_hour( 
     .clk(clk),
     .rst(rst),
     .pm_mod(pm_mod),
@@ -58,7 +58,7 @@ module watch_dp (
 endmodule
 
 
-module watch_time_counter #(parameter TICK_COUNT = 100, BIT_WIDTH = 7, DEFAULT_VAL = 0) (
+module watch_time_counter #(parameter TICK_COUNT = 100, BIT_WIDTH = 7, DEFAULT_VAL = 0, START_VAL = 0) (
     input clk,
     input rst,
     input i_tick, // 100 ms가 됐을 때
@@ -75,10 +75,12 @@ module watch_time_counter #(parameter TICK_COUNT = 100, BIT_WIDTH = 7, DEFAULT_V
     assign o_time_counter = count_reg;
     assign o_tick = tick_reg;
 
+    initial count_reg = START_VAL;
+
     always@(posedge clk, posedge rst) begin
     
         if(rst) begin
-            count_reg <= DEFAULT_VAL;
+            count_reg <= START_VAL;
             tick_reg <= 0;
         end
         else begin
