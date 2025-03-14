@@ -1,6 +1,3 @@
-
-
-
 module watch_dp (
     input clk,
     input rst,
@@ -27,8 +24,8 @@ module watch_dp (
     .clk(clk),
     .rst(rst),
     .btn_tick(1'b0),
-    .tick(o_clk),
-    .o_time(ms_counter),
+    .i_tick(o_clk),
+    .o_time_counter(ms_counter),
     .o_tick(ms_tick)
     );
     watch_time_counter #(.TICK_COUNT(60), .BIT_WIDTH(6)) U_time_sec( 
@@ -36,8 +33,8 @@ module watch_dp (
     .rst(rst),
     .btn_tick(sec_tick),
     .mod_val(sec_mod),
-    .tick(ms_tick),
-    .o_time(s_counter),
+    .i_tick(ms_tick),
+    .o_time_counter(s_counter),
     .o_tick(s_tick)
     );
     watch_time_counter #(.TICK_COUNT(60), .BIT_WIDTH(6)) U_time_min( 
@@ -45,17 +42,17 @@ module watch_dp (
     .rst(rst),
     .btn_tick(min_tick),
     .mod_val(min_mod),
-    .tick(s_tick),
-    .o_time(m_counter),
+    .i_tick(s_tick),
+    .o_time_counter(m_counter),
     .o_tick(m_tick)
     );
-    watch_time_counter #(.TICK_COUNT(24), .BIT_WIDTH(5)) U_time_hour( 
+    watch_time_counter #(.TICK_COUNT(24), .BIT_WIDTH(5), .DEFAULT_VAL(12)) U_time_hour( 
     .clk(clk),
     .rst(rst),
     .btn_tick(hour_tick),
     .mod_val(hour_mod),
-    .tick(m_tick),
-    .o_time(h_counter),
+    .i_tick(m_tick),
+    .o_time_counter(h_counter)
     );
 
 
@@ -63,13 +60,13 @@ mod_val_tick_generator sec_tick_gen(
     .clk(clk),
     .rst(rst),
     .mod_val(sec_mod),
-    .m_tick(sec_tick1)
+    .m_tick(sec_tick)
 );
 mod_val_tick_generator min_tick_gen(
     .clk(clk),
     .rst(rst),
     .mod_val(min_mod),
-    .m_tick(min_tick1)
+    .m_tick(min_tick)
 );
 mod_val_tick_generator hour_tick_gen(
     .clk(clk),
@@ -81,19 +78,19 @@ mod_val_tick_generator hour_tick_gen(
 endmodule
 
 
-module watch_time_counter #(parameter TICK_COUNT = 100, BIT_WIDTH = 7) (
+module watch_time_counter #(parameter TICK_COUNT = 100, BIT_WIDTH = 7, DEFAULT_VAL = 0) (
     input clk,
     input rst,
     input i_tick, // 100 ms가 됐을 때
-    input btn_tick_tick, // 합 차 값이 변경됐을 때 틱
+    input btn_tick, // 합 차 값이 변경됐을 때 틱
     input signed [1:0] mod_val, // 합 차 값
-    output reg [BIT_WIDTH-1:0] o_time_counter,
-    output reg o_tick // 60초가 됐을 때 틱
+    output [BIT_WIDTH-1:0] o_time_counter,
+    output o_tick // 60초가 됐을 때 틱
 );
 
     //parameter TICK_COUNT = 60;
     reg [$clog2(TICK_COUNT -1) : 0] count_reg, count_next;
-    reg tick_reg, tick_next; //출력용
+    reg tick_reg, tick_next;
 
     assign o_time_counter = count_reg;
     assign o_tick = tick_reg;
@@ -101,7 +98,7 @@ module watch_time_counter #(parameter TICK_COUNT = 100, BIT_WIDTH = 7) (
     always@(posedge clk, posedge rst) begin
     
         if(rst) begin
-            count_reg <= 0;
+            count_reg <= DEFAULT_VAL;
             tick_reg <= 0;
         end
         else begin
@@ -114,9 +111,9 @@ module watch_time_counter #(parameter TICK_COUNT = 100, BIT_WIDTH = 7) (
     always @(*) begin
         count_next = count_reg;
         tick_next = 0;  
-        if(btn_tick_tick) begin
-            if(count_reg == TICK_COUNT -1)begin
-                count_next = 0;
+        if(btn_tick) begin
+            if(count_reg >= TICK_COUNT -1)begin
+                count_next = DEFAULT_VAL;
                 tick_next = 1'b1;
             end
             else begin
@@ -125,7 +122,7 @@ module watch_time_counter #(parameter TICK_COUNT = 100, BIT_WIDTH = 7) (
             end
         end if(i_tick) begin
                 if(count_reg == TICK_COUNT -1)begin
-                    count_next = 0;
+                    count_next = DEFAULT_VAL;
                     tick_next = 1'b1;
                 end
                 else begin
@@ -147,19 +144,19 @@ module mod_val_tick_generator (
     output reg m_tick
 );
 
-    reg signed [5:0] 1rev_mod_val;
+    reg [1:0] prev_mod_val;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            1rev_mod_val <= 0;
             m_tick <= 0;
+            prev_mod_val <= 0;
         end else begin
-        1if (mod_val != 1rev_mod_val) begin
+            if (mod_val != 0 && prev_mod_val == 0) begin
                 m_tick <= 1;
             end else begin
                 m_tick <= 0;
             end
-            1rev_mod_va1 <= mod_val;
+            prev_mod_val <= mod_val;
         end
     end
 

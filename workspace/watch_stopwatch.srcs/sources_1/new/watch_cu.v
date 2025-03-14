@@ -8,6 +8,7 @@ module watch_cu(
                     input w_mod,
                     input pm_mod,
                     output reg o_mod,
+                    output o_pm_state,
                     output signed [1:0] o_sec_detect,
                     output signed [1:0] o_min_detect,
                     output signed [1:0] o_hour_detect
@@ -18,7 +19,7 @@ module watch_cu(
     reg state, next;
     reg mod_state, mod_next;
     reg pm_state, pm_next;
-    reg signed [5:0] sec_detect, min_detect, hour_detect;
+    reg signed [1:0] sec_detect, min_detect, hour_detect;
     wire w_sec_mod, w_min_mod, w_hour_mod;
 
     btn_edge_trigger U_btn_sec_D (
@@ -55,6 +56,7 @@ module watch_cu(
     assign o_sec_detect = sec_detect;
     assign o_min_detect = min_detect;
     assign o_hour_detect = hour_detect;
+    assign o_pm_state = pm_state;
 
 // pm_mod 동작
     always @(*) begin
