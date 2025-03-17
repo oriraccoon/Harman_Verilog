@@ -17,9 +17,7 @@ initial begin
     btn_start = 0;
     #5 rst = 0;
     #30 btn_start = 1;
-    #3000000 btn_start = 0;
-    #3000000 btn_start = 1;
-    #3000000 btn_start = 0;
+    #10000 btn_start = 0;
     
     #100000000
     $finish;

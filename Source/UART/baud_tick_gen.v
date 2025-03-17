@@ -5,7 +5,7 @@ module baud_tick_gen (
 );
 
     parameter BAUD_RATE = 9600;
-    localparam BAUD_COUNT = 100_000_000 / BAUD_RATE / 16;
+    localparam BAUD_COUNT = 100_000_000 / BAUD_RATE;
     reg [$clog2(BAUD_COUNT)-1:0] count_reg, count_next;
     reg tick_reg, tick_next;
 

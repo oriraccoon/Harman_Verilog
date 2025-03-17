@@ -8,29 +8,31 @@ module btn_edge_trigger(
 
     wire o_clk, Edge_trigger;
     wire edge_detect;
-    reg [3:0] q_reg;
-    wire [3:0] q_next;
+    reg [7:0] q_reg;
+    wire [7:0] q_next;
     
 
-Hz_changer_100k khc(
+k_Hz_changer khc(
     .clk(clk),
     .rst(rst),
     .o_clk(o_clk)
 );
 
-Shift_Register_4 sr(
+Shift_Register_8 sr(
+    .clk(o_clk),
+    .rst(rst),
     .i_btn(i_btn),
     .q_reg(q_reg),
     .q_next(q_next)
 );
 
-AND_Gate_4input ag(
+AND_Gate_8input ag(
     .q_reg(q_reg),
     .Edge_trigger(Edge_trigger)
 );
 
 Edge_detecter ed(
-    .clk(o_clk),
+    .clk(clk),
     .rst(rst),
     .Edge_trigger(Edge_trigger),
     .edge_detect(edge_detect)
@@ -47,13 +49,13 @@ endmodule
 
 
 // 1. clock 100MHz -> 1KHz
-module Hz_changer_100k(
+module k_Hz_changer(
     input clk,
     input rst,
     output o_clk
 );
 
-	parameter FCOUNT = 100_0;
+	parameter FCOUNT = 100_000;
 
     reg [$clog2(FCOUNT)-1:0] r_counter;
     reg r_clk;
@@ -77,22 +79,24 @@ module Hz_changer_100k(
 endmodule
 
 // 2. 8 Shift Register
-module Shift_Register_4 (
+module Shift_Register_8 (
+    input clk,
+    input rst,
     input i_btn,
-    input [3:0] q_reg,
-    output reg [3:0] q_next
+    input [7:0] q_reg,
+    output reg [7:0] q_next
 );
 
     always @(*) begin
         // q_reg 현재의 상위 7비트를 다음의 하위 7비트에 넣고, 최상위에는 i_btn을 넣어라
-        q_next = {i_btn, q_reg[3:1]};
+        q_next = {i_btn, q_reg[7:1]};
     end
     
 endmodule
 
 // 3. 8 input AND Gate
-module AND_Gate_4input (
-    input [3:0] q_reg,
+module AND_Gate_8input (
+    input [7:0] q_reg,
     output Edge_trigger
 );
 
