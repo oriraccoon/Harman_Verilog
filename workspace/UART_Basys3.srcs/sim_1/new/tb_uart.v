@@ -2,10 +2,10 @@ module tb_uart();
     reg clk, rst, btn_start;
     wire tx;
 
-send_tx_btn DUT(
+Top_Uart DUT(
     .clk(clk),
     .rst(rst),
-    .btn_start(btn_start),
+    .rx(rx),
     .tx(tx)
 );
 
@@ -19,7 +19,9 @@ initial begin
     #30 btn_start = 1;
     #10000 btn_start = 0;
     
-    #100000000
+    #4000000 btn_start = 1;
+    #10000 btn_start = 0;
+    #1000000000
     $finish;
 end
 

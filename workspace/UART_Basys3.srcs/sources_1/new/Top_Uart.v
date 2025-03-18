@@ -1,28 +1,22 @@
-module Top_Uart (
+module Top_Uart(
     input clk,
     input rst,
-    input btn_start,
-    input [7:0] tx_data_in,
-    output tx,
-    output tx_done
+    input rx,
+    output tx
 );
 
-    wire w_tick;
+    wire w_rx_done;
+    wire [7:0] w_rx_data;
 
-    baud_tick_gen U_BAUD_TICK_GEN (
+    uart U_uart (
         .clk(clk),
         .rst(rst),
-        .baud_tick(w_tick)
-    );
-
-    uart_tx U_UART_TX (
-        .clk(clk),
-        .rst(rst),
-        .tick(w_tick),
-        .start_trigger(btn_start),
-        .data_in(tx_data_in),
-        .o_tx(tx),
-        .tx_done(tx_done)
+        .btn_start(w_rx_done),
+        .rx(rx),
+        .tx_data_in(w_rx_data),
+        .tx(tx),
+        .rx_done(w_rx_done),
+        .rx_data_in(w_rx_data)
     );
 
 
