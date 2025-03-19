@@ -115,11 +115,6 @@ module uart_tx (
                 tx_done_next = 1'b0;
                 tick_count_next = 4'h0;
                 if (start_trigger) begin
-                    next = SEND;
-                end
-            end
-            SEND: begin
-                if (tick == 1'b1) begin
                     next = START;
                 end
             end
