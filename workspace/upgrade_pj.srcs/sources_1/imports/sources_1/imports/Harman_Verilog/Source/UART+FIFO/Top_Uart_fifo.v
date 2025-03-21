@@ -81,7 +81,7 @@ always @(posedge clk or posedge rst) begin
     if (rst) begin
         tx_data_in <= 0;
         j <= 0;
-        counter <= 0;
+        counter <= 17382;
         out_com <= 0;
     end else begin
         out_com <= o_command == 7 ? 1 : out_com;
@@ -92,7 +92,7 @@ always @(posedge clk or posedge rst) begin
                     if (j == 7) begin
                         j <= 0;
                         out_com <= 0;
-                    end else j = j + 1;
+                    end else j <= j + 1;
                     counter <= 0;
                 end else begin
                     counter <= counter + 1;
