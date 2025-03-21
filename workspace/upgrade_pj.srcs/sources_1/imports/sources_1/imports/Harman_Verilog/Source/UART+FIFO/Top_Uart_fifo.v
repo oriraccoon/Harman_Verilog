@@ -98,7 +98,7 @@ always @(posedge clk or posedge rst) begin
                     counter <= counter + 1;
                 end
             end
-        end else if (!tx_empty) tx_data_in <= tx_data;
+        end else if (!tx_empty & !out_com) tx_data_in <= tx_data;
         else tx_data_in <= tx_data_in;
     end
 end
