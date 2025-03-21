@@ -18,6 +18,7 @@ module Top_Uart_Watch(
     output [7:0] fnd_font
     );
 
+wire [3:0] w_sec_digit_1, w_sec_digit_10, w_min_digit_1, w_min_digit_10, w_hour_digit_1, w_hour_digit_10;
 wire [7:0] w_tx_data;
 wire [3:0] w_command;
 wire s_trigger;
@@ -28,7 +29,14 @@ TOP_UART_FIFO U_UART_FIFO(
     .rx(rx),
     .tx(tx),
     .s_trigger(s_trigger),
-    .tx_data(w_tx_data)
+    .tx_data(w_tx_data),
+    .w_sec_digit_1(w_sec_digit_1),
+    .w_sec_digit_10(w_sec_digit_10),
+    .w_min_digit_1(w_min_digit_1),
+    .w_min_digit_10(w_min_digit_10),
+    .w_hour_digit_1(w_hour_digit_1),
+    .w_hour_digit_10(w_hour_digit_10),
+    .o_command(w_command)
 );
 
 Top_Module U_STOP_AND_WATCH(
@@ -44,7 +52,13 @@ Top_Module U_STOP_AND_WATCH(
     .t_command(w_command),
     .led_mod(led_mod),
     .fnd_comm(fnd_comm),
-    .fnd_font(fnd_font)
+    .fnd_font(fnd_font),
+    .w_sec_digit_1(w_sec_digit_1),
+    .w_sec_digit_10(w_sec_digit_10),
+    .w_min_digit_1(w_min_digit_1),
+    .w_min_digit_10(w_min_digit_10),
+    .w_hour_digit_1(w_hour_digit_1),
+    .w_hour_digit_10(w_hour_digit_10)
 );
 
 detect_command U_COMMAND(
@@ -67,7 +81,7 @@ module detect_command(
     output [3:0] o_command
 );
 
-parameter IDLE = 0, WAIT = 1, RUN = 2, CLEAR = 3, SEC = 4, MIN = 5, HOUR = 6;
+parameter IDLE = 0, WAIT = 1, RUN = 2, CLEAR = 3, SEC = 4, MIN = 5, HOUR = 6, TIME = 7;
 
 reg [3:0] r_command, n_command;
 assign o_command = r_command;
@@ -98,40 +112,13 @@ end
                 "h", "H": begin
                     n_command = HOUR;
                 end
+                "t", "T": begin
+                    n_command = TIME;
+                end
                 default: n_command = IDLE;
             endcase
         end
     end
 
 endmodule
-/*
-module Time_data(
-    input clk,
-    input rst,
-    input [5:0] s_counter,
-    input [5:0] m_counter,
-    input [4:0] h_counter,
-    output [5:0] s_data,
-    output [5:0] m_data,
-    output [5:0] h_data
-);
-watch_dp U_watch_dp(
-    input clk,
-    input rst
-    output [6:0] ms_counter,
-    output [5:0] s_counter,
-    output [5:0] m_counter,
-    output [4:0] h_counter
-);
-    wire [3:0] w_msec_digit_1, w_msec_digit_10, w_sec_digit_1, w_sec_digit_10, w_min_digit_1, w_min_digit_10, w_hour_digit_1, w_hour_digit_10;
 
-
-    time_digit_spliter tds(
-        .s_counter(s_counter),
-        .m_counter(m_counter),
-        .h_counter(h_counter),
-        .digit({w_hour_digit_10, w_hour_digit_1, w_min_digit_10, w_min_digit_1,
-            w_sec_digit_10, w_sec_digit_1})
-    );
-
-endmodule*/
