@@ -1,24 +1,27 @@
 module TOP_UART_FIFO #(
-    parameter ADDR_WIDTH = 5, DATA_WIDTH = 8
+    parameter ADDR_WIDTH = 2, DATA_WIDTH = 8
 )(
     input clk,
     input rst,
     input rx,
     output tx,
-    output reg [DATA_WIDTH-1:0] tx_data_in
+    output [DATA_WIDTH-1:0] tx_data
 );
+    reg [DATA_WIDTH-1:0] tx_data_in;
     wire rx_done;
     wire tx_empty, rx_empty, tx_full, tx_done;
-    wire [DATA_WIDTH-1:0] rx_data, tx_data;
+    wire [DATA_WIDTH-1:0] rx_data;
     wire [DATA_WIDTH-1:0] rdata;
     wire end_flag;
 
-    btn_edge_trigger #(.SET_HZ(52085)) U_TX_DEBOUNCE (
+    btn_edge_trigger #(.SET_HZ(52085/8)) U_TX_DEBOUNCE (
         .clk  (clk),
         .rst  (rst),
         .i_btn(tx),
         .o_btn(end_flag)
     );
+
+
     uart U_UART (
         .clk(clk),
         .rst(rst),

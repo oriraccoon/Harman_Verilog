@@ -26,7 +26,7 @@ TOP_UART_FIFO U_UART_FIFO(
     .rst(rst),
     .rx(rx),
     .tx(tx),
-    .tx_data_in(w_tx_data)
+    .tx_data(w_tx_data)
 );
 
 Top_Module U_STOP_AND_WATCH(

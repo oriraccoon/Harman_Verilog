@@ -20,9 +20,21 @@ Top_Uart_Watch DUT(
         #20 
         rst = 0;
         #2
-        rx = 0; #10417; send_bit("r"); rx = 1; #31248; // 'r'
+        rx = 0; #869; send_bit("r"); rx = 1; #2604; // 'r'
         #2
-        rx = 0; #10417; send_bit("c"); rx = 1; #31248; // 'c'
+        rx = 0; #869; send_bit("c"); rx = 1; #2604; // 'c'
+                #2
+        rx = 0; #869; send_bit("m"); rx = 1; #2604; // 'c'
+                #2
+        rx = 0; #869; send_bit("m"); rx = 1; #2604; // 'c'
+                #2
+        rx = 0; #869; send_bit("m"); rx = 1; #2604; // 'c'
+                #2
+        rx = 0; #869; send_bit("m"); rx = 1; #2604; // 'c'
+                #2
+        rx = 0; #869; send_bit("m"); rx = 1; #2604; // 'c'
+                #2
+        rx = 0; #869; send_bit("h"); rx = 1; #2604; // 'c'
         #10000;
         $finish;
     end
@@ -31,7 +43,7 @@ Top_Uart_Watch DUT(
         integer i;
         for (i = 0; i < 8; i = i + 1) begin
             rx = data[i];
-            #20834;
+            #1738;
         end
     endtask
 

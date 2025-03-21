@@ -27,6 +27,7 @@ module fifo #(
 
     register_file #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH)) U_register_file(
         .clk(clk),
+        .rst(rst),
         .waddr(waddr),
         .wdata(wdata),
         .wr({~full&wr}),
@@ -110,6 +111,7 @@ module register_file #(
     parameter ADDR_WIDTH = 4, DATA_WIDTH = 8
 )(
     input clk,
+    input rst,
     input [ADDR_WIDTH-1:0] waddr,
     input [DATA_WIDTH-1:0] wdata,
     input wr,
@@ -117,15 +119,25 @@ module register_file #(
     input done,
     output [DATA_WIDTH-1:0] rdata
 );
-    reg [DATA_WIDTH-1:0] mem [0:2**ADDR_WIDTH-1];
 
-    always @(posedge clk ) begin
-        if(wr) begin
+    integer i;
+
+    reg [DATA_WIDTH-1:0] mem [0:2**ADDR_WIDTH-1];
+    reg [ADDR_WIDTH-1:0] prev_waddr;
+
+    always @(posedge clk) begin
+        if (rst) begin
+            for (i = 0; i < 2**ADDR_WIDTH; i = i + 1) begin
+                mem[i] <= 8'bx;
+            end
+            prev_waddr <= 0;
+        end else if (wr) begin
             mem[waddr] <= wdata;
+            mem[prev_waddr] <= 8'bx;
+            prev_waddr <= waddr; 
         end
     end
 
-
     assign rdata = mem[raddr];
-    
+
 endmodule

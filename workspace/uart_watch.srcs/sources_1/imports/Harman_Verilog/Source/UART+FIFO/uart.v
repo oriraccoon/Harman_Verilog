@@ -14,8 +14,6 @@ module uart (
 );
     wire w_tick;
 
-    
-
     uart_tx U_UART_TX (
         .clk(clk),
         .rst(rst),
@@ -244,7 +242,7 @@ module baud_tick_gen (
     input  rst,
     output baud_tick
 );
-    parameter BAUD_RATE = 9600;  //, BAUD_RATE_19200 = 19200, ;
+    parameter BAUD_RATE = 115200;  //, BAUD_RATE_19200 = 19200, ;
     localparam BAUD_COUNT = 100_000_000 / BAUD_RATE / 16;
     reg [$clog2(BAUD_COUNT)-1:0] count_reg, count_next;
     reg tick_reg, tick_next;

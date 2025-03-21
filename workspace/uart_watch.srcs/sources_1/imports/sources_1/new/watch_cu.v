@@ -64,17 +64,17 @@ module watch_cu (
                 end
             end
             SEC: begin
-                if(w_sec_mod == 1'b0) begin
+                if(w_sec_mod == 1'b0 | t_command == IDLE) begin
                     next = IDLE;
                 end
             end
             MIN: begin
-                if(w_min_mod == 1'b0) begin
+                if(w_min_mod == 1'b0 | t_command == IDLE) begin
                     next = IDLE;
                 end
             end
             HOUR: begin
-                if(w_hour_mod == 1'b0) begin
+                if(w_hour_mod == 1'b0 | t_command == IDLE) begin
                     next = IDLE;
                 end
             end
