@@ -1,5 +1,5 @@
 module TOP_UART_FIFO #(
-    parameter ADDR_WIDTH = 2, DATA_WIDTH = 8
+    parameter ADDR_WIDTH = 4, DATA_WIDTH = 8
 )(
     input clk,
     input rst,
@@ -17,20 +17,37 @@ module TOP_UART_FIFO #(
     wire [DATA_WIDTH-1:0] rdata;
     reg [DATA_WIDTH-1:0] tx_data_in;
     wire end_flag;
-    wire [3:0] time_data [0:7];
+    wire [7:0] time_data [0:11];
     reg out_com;
+    reg i;
+    reg [DATA_WIDTH-1:0] time_data_reg;
 
-    assign time_data[0] = w_sec_digit_1 + 8'h30;
-    assign time_data[1] = w_sec_digit_10 + 8'h30;
-    assign time_data[2] = ":";
-    assign time_data[3] = w_min_digit_1 + 8'h30;
-    assign time_data[4] = w_min_digit_10 + 8'h30;
-    assign time_data[5] = ":";
-    assign time_data[6] = w_hour_digit_1 + 8'h30;
-    assign time_data[7] = w_hour_digit_10 + 8'h30;
+    assign time_data[0] = "/r";
+    assign time_data[1] = "/n";
+    assign time_data[2] = w_sec_digit_1 + 8'h30;
+    assign time_data[3] = w_sec_digit_10 + 8'h30;
+    assign time_data[4] = ":";
+    assign time_data[5] = w_min_digit_1 + 8'h30;
+    assign time_data[6] = w_min_digit_10 + 8'h30;
+    assign time_data[7] = ":";
+    assign time_data[8] = w_hour_digit_1 + 8'h30;
+    assign time_data[9] = w_hour_digit_10 + 8'h30;
+    assign time_data[10] = "/r";
+    assign time_data[11] = "/n";
 
 assign s_trigger = !tx_empty & ~tx_done;
-
+always @(*) begin
+    out_com = o_command == 7 & !tx_done & tx_empty ? 1:0;
+    if(out_com) begin
+        time_data_reg = time_data[i];
+        if(i == 11) begin
+            i = 0;
+            out_com = 0;
+        end
+        else i = i + 1;
+    end
+end
+//assign rx_data = time_data_reg & rx_data;
 
     btn_edge_trigger #(.SET_HZ(3000)) U_TX_DEBOUNCE (
         .clk  (clk),
@@ -74,34 +91,13 @@ assign s_trigger = !tx_empty & ~tx_done;
         .full()
     );
 
-integer j;
-reg [16:0] counter;
-
-always @(posedge clk or posedge rst) begin
-    if (rst) begin
-        tx_data_in <= 0;
-        j <= 0;
-        counter <= 17382;
-        out_com <= 0;
-    end else begin
-        out_com <= o_command == 7 ? 1 : out_com;
-        if (!tx_done & out_com) begin
-            if (tx_empty) begin
-                if (counter == 17382) begin
-                    tx_data_in <= time_data[j];
-                    if (j == 7) begin
-                        j <= 0;
-                        out_com <= 0;
-                    end else j <= j + 1;
-                    counter <= 0;
-                end else begin
-                    counter <= counter + 1;
-                end
-            end
-        end else if (!tx_empty & !out_com) tx_data_in <= tx_data;
-        else tx_data_in <= tx_data_in;
+    always @(posedge clk or posedge rst) begin
+        if(rst) tx_data_in = 0;
+        else begin
+            if(!tx_empty) tx_data_in = tx_data;
+            else tx_data_in = tx_data_in;
+        end
     end
-end
 
 
 endmodule
