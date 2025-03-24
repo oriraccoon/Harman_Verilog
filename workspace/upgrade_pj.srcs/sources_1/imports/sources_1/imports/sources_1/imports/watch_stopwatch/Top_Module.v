@@ -97,9 +97,9 @@ led_generate U_led_generate(
 Time_data U_Time_data(
     .clk(clk),
     .rst(rst),
-    .s_counter(s_counter),
-    .m_counter(m_counter),
-    .h_counter(h_counter),
+    .s_counter(w_s_counter),
+    .m_counter(w_m_counter),
+    .h_counter(w_h_counter),
     .w_sec_digit_1(w_sec_digit_1),
     .w_sec_digit_10(w_sec_digit_10),
     .w_min_digit_1(w_min_digit_1),
@@ -140,12 +140,17 @@ module Time_data(
     output [3:0] w_sec_digit_1, w_sec_digit_10, w_min_digit_1, w_min_digit_10, w_hour_digit_1, w_hour_digit_10
 );
 
-    time_digit_spliter tds(
-        .s_counter(s_counter),
-        .m_counter(m_counter),
-        .h_counter(h_counter),
-        .digit({w_hour_digit_10, w_hour_digit_1, w_min_digit_10, w_min_digit_1,
-            w_sec_digit_10, w_sec_digit_1})
+    digit_spliter #(.WIDTH(6)) s_split(
+        .bcd(s_counter),
+        .digit({w_sec_digit_10, w_sec_digit_1})
+    );
+    digit_spliter #(.WIDTH(6)) m_split(
+        .bcd(m_counter),
+        .digit({w_min_digit_10, w_min_digit_1})
+    );
+    digit_spliter #(.WIDTH(5)) h_split(
+        .bcd(h_counter),
+        .digit({w_hour_digit_10, w_hour_digit_1})
     );
 
 endmodule

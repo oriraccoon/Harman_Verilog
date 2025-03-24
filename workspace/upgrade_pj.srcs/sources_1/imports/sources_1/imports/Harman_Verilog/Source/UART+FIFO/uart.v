@@ -9,11 +9,12 @@ module uart (
     // rx
     input        rx,
     output       rx_done,
-    output [7:0] rx_data
+    output [7:0] rx_data,
+    output tick
 
 );
     wire w_tick;
-
+assign tick = w_tick;
     uart_tx U_UART_TX (
         .clk(clk),
         .rst(rst),

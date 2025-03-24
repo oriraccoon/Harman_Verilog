@@ -19,35 +19,30 @@ module TOP_UART_FIFO #(
     wire end_flag;
     wire [7:0] time_data [0:11];
     reg out_com;
-    reg i;
-    reg [DATA_WIDTH-1:0] time_data_reg;
+    reg [3:0] i;
+    wire tick;
+    reg [$clog2(161)-1:0] tick_cont;
 
-    assign time_data[0] = "/r";
-    assign time_data[1] = "/n";
-    assign time_data[2] = w_sec_digit_1 + 8'h30;
-    assign time_data[3] = w_sec_digit_10 + 8'h30;
+initial begin
+    i = 0;
+    out_com = 0;
+    tick_cont = 0;
+end
+    assign time_data[0] = "\r";
+    assign time_data[1] = "\n";
+    assign time_data[2] = w_hour_digit_10 + 8'h30;
+    assign time_data[3] = w_hour_digit_1 + 8'h30;
     assign time_data[4] = ":";
-    assign time_data[5] = w_min_digit_1 + 8'h30;
-    assign time_data[6] = w_min_digit_10 + 8'h30;
+    assign time_data[5] = w_min_digit_10 + 8'h30;
+    assign time_data[6] = w_min_digit_1 + 8'h30;
     assign time_data[7] = ":";
-    assign time_data[8] = w_hour_digit_1 + 8'h30;
-    assign time_data[9] = w_hour_digit_10 + 8'h30;
-    assign time_data[10] = "/r";
-    assign time_data[11] = "/n";
+    assign time_data[8] = w_sec_digit_10 + 8'h30;
+    assign time_data[9] = w_sec_digit_1 + 8'h30;
+    assign time_data[10] = "\r";
+    assign time_data[11] = "\n";
 
 assign s_trigger = !tx_empty & ~tx_done;
-always @(*) begin
-    out_com = o_command == 7 & !tx_done & tx_empty ? 1:0;
-    if(out_com) begin
-        time_data_reg = time_data[i];
-        if(i == 11) begin
-            i = 0;
-            out_com = 0;
-        end
-        else i = i + 1;
-    end
-end
-//assign rx_data = time_data_reg & rx_data;
+
 
     btn_edge_trigger #(.SET_HZ(3000)) U_TX_DEBOUNCE (
         .clk  (clk),
@@ -60,13 +55,14 @@ end
     uart U_UART (
         .clk(clk),
         .rst(rst),
-        .btn_start(!tx_empty & ~tx_done),
+        .btn_start((!tx_empty & ~tx_done)|out_com),
         .tx_data(tx_data_in),
         .tx_done(tx_done),
         .tx(tx),
         .rx(rx),
         .rx_done(rx_done),
-        .rx_data(rx_data)
+        .rx_data(rx_data),
+        .tick(tick)
     );
 
     fifo #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(DATA_WIDTH)) U_FIFO_TX (
@@ -94,7 +90,23 @@ end
     always @(posedge clk or posedge rst) begin
         if(rst) tx_data_in = 0;
         else begin
-            if(!tx_empty) tx_data_in = tx_data;
+            out_com = o_command == 7 & !tx_done & tx_empty ? 1:out_com;
+            if(out_com) begin
+                if(tick) tick_cont = tick_cont + 1;
+
+                if(tick_cont == 161) begin
+                    if(!tx_done) begin
+                        tx_data_in = time_data[i];
+                        tick_cont = 0;
+                        if(i == 11) begin
+                            i = 0;
+                            out_com = 0;
+                        end
+                        else i = i + 1;
+                    end
+                end
+            end
+            else if(!tx_empty) tx_data_in = tx_data;
             else tx_data_in = tx_data_in;
         end
     end
