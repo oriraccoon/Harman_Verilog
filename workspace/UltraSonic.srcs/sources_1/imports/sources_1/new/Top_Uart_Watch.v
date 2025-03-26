@@ -32,27 +32,14 @@ ila_0 ila(
     echo
 );    
 
-    wire tick;
-    reg [$clog2(644)-1:0] dis_get;
-    wire [$clog2(400)-1:0] distance, i_dis;
-    reg [$clog2(400)-1:0] reg_dis;
-
-    always @(posedge tick) begin
-        dis_get <= dis_get + 1;
-        if(dis_get == 644) begin
-            dis_get <= 0;
-            reg_dis <= i_dis;
-        end
-    end
-    assign distance = reg_dis;
-
+wire [$clog2(400)-1:0] distance;
 
     myHC_SR04 U_myHC_SR04(
         .clk(clk),
         .rst(rst),
         .trig(trig),
         .echo(echo),
-        .distance(i_dis)
+        .distance(distance)
 );
 
 TOP_UART_FIFO U_UART_FIFO(
@@ -83,7 +70,7 @@ Top_Module U_STOP_AND_WATCH(
     .sw_mod(sw_mod),
     .switch_mod(switch_mod),
     .pm_mod(pm_mod),
-    .distance(i_dis),
+    .distance(distance),
     .ultra_mod(ultra_mod),
     .t_command(w_command),
     .led_mod(led_mod),

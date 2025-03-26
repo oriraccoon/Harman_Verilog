@@ -47,35 +47,25 @@ module Fnd_Ctrl_Unit(
     );
 
     ultra_fnd_ctrl U_ultra_fnd_ctrl(
-                        .cen1(Ultra_data[3]),
-                        .cen10(Ultra_data[2]),
-                        .cen100(Ultra_data[1]),
-                        .cen1000(Ultra_data[0]),
+                        .cen1000(0),
+                        .cen1(Ultra_data[2]),
+                        .cen10(Ultra_data[1]),
+                        .cen100(Ultra_data[0]),
                         .clk(clk),
                         .rst(rst),
                         .seg_out(ultra_fnd_font),
                         .an(ultra_fnd_comm)
     );
 
-    clock_divider_1sec cd(
-        .clk(clk),
-        .rst(rst),
-        .o_clk(o_clk)
-    );
+
 
     assign fnd_font = ultra_mod ? ultra_fnd_font : w_mod ? watch_fnd_font : stopwatch_fnd_font;
     assign fnd_comm = ultra_mod ? ultra_fnd_comm : w_mod ? watch_fnd_comm : stopwatch_fnd_comm;
 
-    wire [7:0] Ultra_data [0:3];
-    reg [$clog2(400)-1:0] r_distance;
-    wire [$clog2(400)-1:0] i_distance;
-    always @(posedge o_clk) begin
-        r_distance <= distance;
-    end
-    assign i_distance = r_distance;
-    digit_spliter2 #(.WIDTH(16)) s_split(
-        .bcd(i_distance),
-        .digit({Ultra_data[0], Ultra_data[1], Ultra_data[2], Ultra_data[3]})
+    wire [3:0] Ultra_data [0:2];
+    digit_spliter2 #(.WIDTH(9)) s_split(
+        .bcd(distance),
+        .digit({Ultra_data[0], Ultra_data[1], Ultra_data[2]})
     );
 
 endmodule

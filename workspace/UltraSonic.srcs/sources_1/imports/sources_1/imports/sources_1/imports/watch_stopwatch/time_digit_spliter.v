@@ -35,14 +35,13 @@ module digit_spliter #(parameter WIDTH = 8)(
 
 endmodule
 
-module digit_spliter2 #(parameter WIDTH = 16)(
+module digit_spliter2 #(parameter WIDTH = 9)(
     input [WIDTH-1:0] bcd,
-    output [15:0] digit
+    output [12:0] digit
 );
 
     assign digit[3:0] = (bcd % 10);
     assign digit[7:4] = (bcd % 100) / 10;
-    assign digit[11:8] = (bcd%1000) / 100;
-    assign digit[15:12] = (bcd%10000) / 1000; 
+    assign digit[11:8] = (bcd % 1000) / 100;
 
 endmodule

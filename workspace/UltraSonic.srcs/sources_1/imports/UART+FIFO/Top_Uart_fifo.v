@@ -21,7 +21,13 @@ module TOP_UART_FIFO #(
     wire end_flag;
     reg out_centi = 0;
     wire [7:0] time_data [0:11];
-    wire [7:0] Ultra_data [0:3];
+    wire [3:0] Ultra_data [0:2];
+
+    digit_spliter2 #(.WIDTH(9)) s_split(
+        .bcd(distance),
+        .digit({Ultra_data[0], Ultra_data[1], Ultra_data[2]})
+    );
+
     reg out_com;
 
     reg [3:0] i;
@@ -48,10 +54,6 @@ end
     
 assign s_trigger = !tx_empty & ~tx_done;
 
-    digit_spliter2 #(.WIDTH(16)) s_split(
-        .bcd(distance),
-        .digit({Ultra_data[0], Ultra_data[1], Ultra_data[2], Ultra_data[3]})
-    );
 
     btn_edge_trigger #(.SET_HZ(3000)) U_TX_DEBOUNCE (
         .clk  (clk),
@@ -100,7 +102,7 @@ assign s_trigger = !tx_empty & ~tx_done;
         if(rst) tx_data_in = 0;
         else begin
             out_com = o_command == 7 & !tx_done & tx_empty ? 1:out_com;
-            //out_centi = o_command == 8 & !tx_done & tx_empty ? 1:out_centi;
+            out_centi = o_command == 8 & !tx_done & tx_empty ? 1:out_centi;
             if(out_com) begin
                 if(tick) tick_cont = tick_cont + 1;
 
@@ -121,11 +123,11 @@ assign s_trigger = !tx_empty & ~tx_done;
                 if(tick_cont == 161) begin
 
                     if(!tx_done) begin
-                        tx_data_in = Ultra_data[i];
+                        tx_data_in = Ultra_data[i] + 8'h30;
                         tick_cont = 0;
-                        if(i == 3) begin
+                        if(i == 2) begin
                             i = 0;
-                            out_com = 0;
+                            out_centi = 0;
                         end
                         else i = i + 1;
                     end

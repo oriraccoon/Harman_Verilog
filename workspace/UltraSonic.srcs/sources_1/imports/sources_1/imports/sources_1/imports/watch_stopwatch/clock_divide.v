@@ -94,13 +94,13 @@ module clock_divider_1usec(
     end
 endmodule
 
-module clock_divider_1sec(
+module clock_divider_0_5sec(
     input clk,
     input rst,
     output o_clk
 );
 
-	parameter FCOUNT = 100_000_000; // 10u
+	parameter FCOUNT = 50_000_000; // 10u
 
     reg [$clog2(FCOUNT)-1:0] r_counter;
     reg r_clk;

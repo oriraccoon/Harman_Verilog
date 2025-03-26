@@ -1,8 +1,8 @@
 module ultra_fnd_ctrl(
-    input [$clog2(100) - 1:0] cen1,
-    input [$clog2(60) - 1:0] cen10,
-    input [$clog2(60) - 1:0] cen100,
-    input [$clog2(24) - 1:0] cen1000,
+    input [3:0] cen1,
+    input [3:0] cen10,
+    input [3:0] cen100,
+    input [3:0] cen1000,
     input clk,
     input rst,
     output reg [7:0] seg_out,
