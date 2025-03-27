@@ -3,6 +3,8 @@ module humidity (
     input rst,
     output [15:0] humidity_data,
     output [15:0] temperature_data,
+    output [2:0] c_state,
+    output [5:0] bit_count,
     inout dht_io
 );
 
@@ -18,9 +20,10 @@ module humidity (
         .clk(clk),
         .rst(rst),
         .tick(o_clk),
+        .c_state(c_state),
         .humidity_data(humidity_data),
         .temperature_data(temperature_data),
-
+        .bit_count_o(bit_count),
         .dht_io(dht_io)
     );
 
@@ -57,62 +60,68 @@ module DHT_controll_unit (
     input clk,
     input rst,
     input tick,
-    input s_btn,
-    output [3:0] current_state,
-    output [15:0] humidity_data,
-    output [15:0] temperature_data,
-    output led_ind,
+    output [2:0] c_state,
+    output [5:0] bit_count_o,
+    output reg [15:0] humidity_data,
+    output reg [15:0] temperature_data,
 
     inout dht_io
 );
-    parameter START_CNT = 1800, WAIT_CNT = 3, DATA_0 = 4, DATA_1 = 7, TIME_OUT = 2000, LOOP_CNT = 50000;
+    parameter START_CNT = 1800, WAIT_CNT = 3, DATA_0 = 40, TIME_OUT = 2000;
+    
+    wire o_clk, tick2;
 
-    localparam IDLE = 0, START = 1, WAIT = 2, RESPONSE = 3, READY = 4, READ = 5;
+    localparam IDLE = 0, START = 1, WAIT = 2, RESPONSE = 3, READY = 4, SET = 5, READ = 6;
+    
+    tick_gen #(.FCOUNT(50_000_000)) half_sec(
+        .clk(clk),
+        .rst(rst),
+        .o_clk(o_clk)
+    );
+    tick_gen #(.FCOUNT(100)) usec(
+        .clk(clk),
+        .rst(rst),
+        .o_clk(tick2)
+    );
 
     reg [2:0] state, next;
     reg [$clog2(TIME_OUT)-1:0] tick_count_reg, tick_count_next;
     reg dht_io_reg, dht_io_next;
     reg dht_io_oe_reg, dht_io_oe_next;
-    reg led_ind_reg, led_ind_next;
-
+    reg [4:0] sec_reg, sec_next;
     reg [39:0] data_buffer, data_buffer_next;
     reg [5:0] bit_count, bit_count_next;
-    reg dht_io_last, dht_io_sync, dht_io_unsync;
-    reg [15:0] humidity_reg, temperature_reg;
-    reg valid_data;
-
-    assign current_state = state;
+    reg dht_io_sync;
+    reg [15:0] humidity_reg, humidity_next, temperature_reg, temperature_next;
+    assign c_state = state;
+    assign bit_count_o = bit_count;
     assign dht_io = (dht_io_oe_reg) ? dht_io_reg : 1'bz;
-    assign led_ind = led_ind_reg;
-    assign humidity_data = valid_data ? humidity_reg : 16'h0;
-    assign temperature_data = valid_data ? temperature_reg : 16'h0;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             state <= IDLE;
             dht_io_reg <= 0;
             tick_count_reg <= 0;
-            led_ind_reg <= 0;
             dht_io_oe_reg <= 1;
             data_buffer <= 0;
             bit_count <= 0;
-            dht_io_last <= 0;
             dht_io_sync <= 0;
-            dht_io_unsync <= 0;
             humidity_reg <= 0;
             temperature_reg <= 0;
-            valid_data <= 0;
+            sec_reg <= 0;
         end else begin
             state <= next;
             dht_io_reg <= dht_io_next;
             tick_count_reg <= tick_count_next;
-            led_ind_reg <= led_ind_next;
             dht_io_oe_reg <= dht_io_oe_next;
             data_buffer <= data_buffer_next;
             bit_count <= bit_count_next;
-            dht_io_last <= dht_io_sync;
-            dht_io_sync <= dht_io_unsync;
-            dht_io_unsync <= dht_io;
+            dht_io_sync <= dht_io;
+            sec_reg <= sec_next;
+            humidity_reg <= humidity_next;
+            humidity_data <= humidity_reg;
+            temperature_reg <= temperature_next;
+            temperature_data <= temperature_reg;
         end
     end
 
@@ -120,19 +129,20 @@ module DHT_controll_unit (
         next = state;
         dht_io_next = dht_io_reg;
         tick_count_next = tick_count_reg;
-        led_ind_next = led_ind_reg;
         dht_io_oe_next = dht_io_oe_reg;
         data_buffer_next = data_buffer;
         bit_count_next = bit_count;
-
+        sec_next = sec_reg;
+        humidity_next = humidity_reg;
+        temperature_next = temperature_reg;
         case (state)
             IDLE: begin
-                dht_io_next = 1;
                 dht_io_oe_next = 1;
-                led_ind_next = 0;
-                if (s_btn) begin
+                dht_io_next = 1;
+                if(o_clk) sec_next = sec_next + 1;
+                else if(sec_reg == 21) begin
                     next = START;
-                    tick_count_next = 0;
+                    sec_next = 0;
                 end
             end
 
@@ -140,7 +150,7 @@ module DHT_controll_unit (
                 dht_io_next = 0;
                 if (tick) begin
                     tick_count_next = tick_count_reg + 1;
-                    if (tick_count_reg == START_CNT) begin
+                    if (tick_count_reg == START_CNT - 1) begin
                         next = WAIT;
                         tick_count_next = 0;
                     end
@@ -151,7 +161,7 @@ module DHT_controll_unit (
                 dht_io_next = 1;
                 if (tick) begin
                     tick_count_next = tick_count_reg + 1;
-                    if (tick_count_reg == WAIT_CNT) begin
+                    if (tick_count_reg == WAIT_CNT - 1) begin
                         next = RESPONSE;
                         tick_count_next = 0;
                     end
@@ -160,44 +170,54 @@ module DHT_controll_unit (
 
             RESPONSE: begin
                 dht_io_oe_next = 0;
-                if (dht_io_last & ~dht_io_sync) begin
-                    next = READY;
-                    tick_count_next = 0;
-                    bit_count_next = 0;
-                end
+                    if (~dht_io_sync & dht_io) begin
+                        next = READY;
+                    end
             end
 
             READY: begin
-                if (~dht_io_last & dht_io_sync) begin
-                    next = READ;
-                    tick_count_next = 0;
-                end
+                    if (dht_io_sync & ~dht_io) begin
+                        next = SET;
+                        bit_count_next = 0;
+                        tick_count_next = 0;
+                    end
             end
-
+            SET : begin
+                if (bit_count == 40) begin
+                    // bit_count_next = 0;
+                    if (data_buffer[39:32] == (data_buffer[31:24] + data_buffer[23:16] + data_buffer[15:8] + data_buffer[7:0])) begin
+                        humidity_next = {data_buffer[39:32], data_buffer[31:24]};
+                        temperature_next = {data_buffer[23:16], data_buffer[15:8]};
+                    end else begin
+                        humidity_next = 16'd404;
+                        temperature_next = 16'd404;
+                    end
+                    // next = IDLE;
+                end
+                else if (~dht_io_sync & dht_io) begin
+                        next = READ;
+                    end
+            end
             READ: begin
-                if (tick) begin
+                if (tick2) begin
                     tick_count_next = tick_count_reg + 1;
 
-                    if (~dht_io_last & dht_io_sync) begin
-                        if (tick_count_reg > DATA_1) begin
+
+                    if (dht_io_sync & ~dht_io) begin
+                        if (tick_count_reg >= DATA_0) begin
                             data_buffer_next = {data_buffer[38:0], 1'b1};
-                        end else if (tick_count_reg > DATA_0) begin
+                        end else if (tick_count_reg < DATA_0) begin
                             data_buffer_next = {data_buffer[38:0], 1'b0};
                         end
                         bit_count_next = bit_count + 1;
                         tick_count_next = 0;
+                        next = SET;
                     end
 
-                    if (bit_count == 40) begin
-                        next = IDLE;
-                        if (data_buffer[39:32] == (data_buffer[31:24] + data_buffer[23:16] + data_buffer[15:8] + data_buffer[7:0])) begin
-                            humidity_reg = {data_buffer[39:32], data_buffer[31:24]};
-                            temperature_reg = {data_buffer[23:16], data_buffer[15:8]};
-                            valid_data = 1;
-                        end else begin
-                            valid_data = 0;
-                        end
+                    else if (tick_count_reg == TIME_OUT - 1) begin
+                        // next = IDLE;
                     end
+
                 end
             end
         endcase

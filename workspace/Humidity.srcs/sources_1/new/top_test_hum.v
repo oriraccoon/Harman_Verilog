@@ -27,22 +27,26 @@ module top_test_hum (
     inout dht_io
 );
 wire [15:0] humidity_data, temperature_data;
-
-ila_0 ila(
-clk,
-
-
-humidity_data,
-temperature_data
-);
-
+wire [2:0] c_state;
+wire [5:0] bit_count;
 humidity dtest(
     .clk(clk),
     .rst(rst),
     .humidity_data(humidity_data),
+    .c_state(c_state),
     .temperature_data(temperature_data),
-    .dht_io(dht_io)
+    .dht_io(dht_io),
+    .bit_count(bit_count)
 );
+ila_1 ila(
+clk,
+
+
+c_state,
+bit_count,
+humidity_data
+);
+
 
 assign led = humidity_data == 0 ? 2'b01 : 2'b10;
 
