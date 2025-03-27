@@ -67,7 +67,7 @@ module DHT_controll_unit (
 
     inout dht_io
 );
-    parameter START_CNT = 1800, WAIT_CNT = 3, DATA_0 = 40, TIME_OUT = 2000;
+    parameter START_CNT = 1800, WAIT_CNT = 3, DATA_0 = 40, TIME_OUT = 20000;
     
     wire o_clk, tick2;
 
@@ -105,7 +105,6 @@ module DHT_controll_unit (
             dht_io_oe_reg <= 1;
             data_buffer <= 0;
             bit_count <= 0;
-            dht_io_sync <= 0;
             humidity_reg <= 0;
             temperature_reg <= 0;
             sec_reg <= 0;
@@ -116,12 +115,19 @@ module DHT_controll_unit (
             dht_io_oe_reg <= dht_io_oe_next;
             data_buffer <= data_buffer_next;
             bit_count <= bit_count_next;
-            dht_io_sync <= dht_io;
             sec_reg <= sec_next;
             humidity_reg <= humidity_next;
             humidity_data <= humidity_reg;
             temperature_reg <= temperature_next;
             temperature_data <= temperature_reg;
+        end
+    end
+
+    always @(posedge tick2 or posedge rst) begin
+        if (rst) begin
+            dht_io_sync <= 0;
+        end else begin
+            dht_io_sync <= dht_io;
         end
     end
 
@@ -170,17 +176,17 @@ module DHT_controll_unit (
 
             RESPONSE: begin
                 dht_io_oe_next = 0;
-                    if (~dht_io_sync & dht_io) begin
-                        next = READY;
-                    end
+                if (dht_io) begin
+                    next = READY;
+                end
             end
 
             READY: begin
-                    if (dht_io_sync & ~dht_io) begin
-                        next = SET;
-                        bit_count_next = 0;
-                        tick_count_next = 0;
-                    end
+                if (~dht_io) begin
+                    next = SET;
+                    bit_count_next = 0;
+                    tick_count_next = 0;
+                end
             end
             SET : begin
                 if (bit_count == 40) begin
@@ -194,16 +200,16 @@ module DHT_controll_unit (
                     end
                     // next = IDLE;
                 end
-                else if (~dht_io_sync & dht_io) begin
-                        next = READ;
-                    end
+                else if (dht_io) begin
+                    next = READ;
+                end
             end
             READ: begin
                 if (tick2) begin
                     tick_count_next = tick_count_reg + 1;
 
 
-                    if (dht_io_sync & ~dht_io) begin
+                    if (~dht_io) begin
                         if (tick_count_reg >= DATA_0) begin
                             data_buffer_next = {data_buffer[38:0], 1'b1};
                         end else if (tick_count_reg < DATA_0) begin
@@ -215,7 +221,7 @@ module DHT_controll_unit (
                     end
 
                     else if (tick_count_reg == TIME_OUT - 1) begin
-                        // next = IDLE;
+                        next = IDLE;
                     end
 
                 end
