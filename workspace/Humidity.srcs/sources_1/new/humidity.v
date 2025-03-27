@@ -146,7 +146,7 @@ module DHT_controll_unit (
                 dht_io_oe_next = 1;
                 dht_io_next = 1;
                 if(o_clk) sec_next = sec_next + 1;
-                else if(sec_reg == 21) begin
+                else if(sec_reg == 30) begin
                     next = START;
                     sec_next = 0;
                 end
@@ -189,18 +189,7 @@ module DHT_controll_unit (
                 end
             end
             SET : begin
-                if (bit_count == 40) begin
-                    // bit_count_next = 0;
-                    if (data_buffer[39:32] == (data_buffer[31:24] + data_buffer[23:16] + data_buffer[15:8] + data_buffer[7:0])) begin
-                        humidity_next = {data_buffer[39:32], data_buffer[31:24]};
-                        temperature_next = {data_buffer[23:16], data_buffer[15:8]};
-                    end else begin
-                        humidity_next = 16'd404;
-                        temperature_next = 16'd404;
-                    end
-                    // next = IDLE;
-                end
-                else if (dht_io) begin
+                if (dht_io) begin
                     next = READ;
                 end
             end
@@ -219,7 +208,17 @@ module DHT_controll_unit (
                         tick_count_next = 0;
                         next = SET;
                     end
-
+                    else if (bit_count == 40) begin
+                        // bit_count_next = 0;
+                        //if (data_buffer[39:32] == (data_buffer[31:24] + data_buffer[23:16] + data_buffer[15:8] + data_buffer[7:0])) begin
+                            humidity_next = {data_buffer[39:32], data_buffer[31:24]};
+                            temperature_next = {data_buffer[23:16], data_buffer[15:8]};
+                        //end else begin
+                        //    humidity_next = 16'd404;
+                        //    temperature_next = 16'd404;
+                        //end
+                        next = IDLE;
+                    end
                     else if (tick_count_reg == TIME_OUT - 1) begin
                         next = IDLE;
                     end
