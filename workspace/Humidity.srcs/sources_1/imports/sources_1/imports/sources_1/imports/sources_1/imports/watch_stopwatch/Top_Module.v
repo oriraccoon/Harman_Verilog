@@ -146,6 +146,7 @@ always @(posedge clk or posedge rst) begin
             led_mod[1:0] <= sw_mod ? 2'b10 : 2'b01;
             led_mod[3:2] <= switch_mod ? 2'b10 : 2'b01;
             led_mod[5:4] <= pm_mod ? 2'b10 : 2'b01;
+            led_mod[7:6] <= 2'b00;
         end
     end
 end

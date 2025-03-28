@@ -96,7 +96,7 @@ module Fnd_Ctrl_Unit(
         .digit(hum_integral)
     );
     digit_spliter h_decimal(
-        .bcd(temperature_data[7:0]),
+        .bcd(humidity_data[7:0]),
         .digit(hum_decimal)
     );
     digit_spliter t_integral(

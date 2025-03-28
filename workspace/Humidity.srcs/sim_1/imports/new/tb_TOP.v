@@ -31,7 +31,7 @@ Top_Uart_Watch DUT(
                 #2
         rx = 0; #869; send_bit("m"); rx = 1; #2604;
                 #200
-        rx = 0; #869; send_bit("o"); rx = 1; #2604;
+        rx = 0; #869; send_bit("p"); rx = 1; #2604;
         #2000000
         rx = 0; #869; send_bit("m"); rx = 1; #2604;
                 #2

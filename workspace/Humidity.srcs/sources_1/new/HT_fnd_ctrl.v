@@ -16,11 +16,9 @@ module HT_fnd_ctrl(
 
 parameter HUMIDITY = 9, TEMPERATURE = 10;
 
-    reg [7:0] seg_state;
     wire o_clk;
-    wire state;
+    reg state;
 
-    assign state = (switch_mod == 9) ? 1 : (switch_mod == 10) ? 0 : state;
     clock_divider_200hz cd(
         .clk(clk),
         .rst(rst),
@@ -50,8 +48,14 @@ parameter HUMIDITY = 9, TEMPERATURE = 10;
     initial begin
         an = 4'b1110;
         seg_out = 8'hFF;
+        state = 1;
     end
 
+    always @(posedge clk or posedge rst) begin
+        if(rst) state <= 1;
+        else state = (switch_mod == HUMIDITY) ? 1 : (switch_mod == TEMPERATURE) ? 0 : state;
+    end
+    
     always @(posedge o_clk) begin
         case(state)
             1 : begin 

@@ -89,7 +89,7 @@ module TOP_UART_FIFO #(
         .digit(hum_integral)
     );
     digit_spliter h_decimal(
-        .bcd(temperature_data[7:0]),
+        .bcd(humidity_data[7:0]),
         .digit(hum_decimal)
     );
     digit_spliter t_integral(
@@ -268,7 +268,10 @@ assign s_trigger = !tx_empty & ~tx_done;
             // --------------------------------------------------------------------
             // Just Buffer
             // --------------------------------------------------------------------
-            else if(!tx_empty) tx_data_in = tx_data;
+            else if(!tx_empty) begin
+                if(tx_data != "d" | tx_data != "D" | tx_data != "o" | tx_data != "O" | tx_data != "p" | tx_data != "P")
+                    tx_data_in = tx_data;
+            end
             else tx_data_in = tx_data_in;
         end
     end
