@@ -38,15 +38,6 @@ humidity dtest(
     .dht_io(dht_io),
     .bit_count(bit_count)
 );
-ila_1 ila(
-clk,
-
-
-c_state,
-bit_count,
-humidity_data
-);
-
 
 assign led = humidity_data == 0 ? 2'b01 : 2'b10;
 

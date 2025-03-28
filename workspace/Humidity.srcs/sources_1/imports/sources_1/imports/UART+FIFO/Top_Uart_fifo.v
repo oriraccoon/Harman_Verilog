@@ -268,10 +268,7 @@ assign s_trigger = !tx_empty & ~tx_done;
             // --------------------------------------------------------------------
             // Just Buffer
             // --------------------------------------------------------------------
-            else if(!tx_empty) begin
-                if(tx_data != "d" | tx_data != "D" | tx_data != "o" | tx_data != "O" | tx_data != "p" | tx_data != "P")
-                    tx_data_in = tx_data;
-            end
+            else if(!tx_empty) tx_data_in = tx_data;
             else tx_data_in = tx_data_in;
         end
     end
