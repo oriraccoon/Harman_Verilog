@@ -9,11 +9,12 @@ module Top_Module(
                     input switch_mod,
                     input pm_mod,
                     input ultra_mod,
+                    input hump_mod,
                     input [$clog2(400)-1:0] distance,
                     input [3:0] t_command,
                     input [15:0] humidity_data,
                     input [15:0] temperature_data,
-                    output [5:0] led_mod,
+                    output [7:0] led_mod,
                     output [3:0] fnd_comm,
                     output [7:0] fnd_font,
                     output [3:0] w_sec_digit_1, w_sec_digit_10, w_min_digit_1, w_min_digit_10, w_hour_digit_1, w_hour_digit_10
@@ -40,6 +41,7 @@ Control_Unit U_Control_Unit(
                     .sw_mod(sw_mod),
                     .w_mod(switch_mod),
                     .ultra_mod(ultra_mod),
+                    .hump_mod(hump_mod),
                     .t_command(t_command),
                     .o_run(o_run),
                     .o_clear(o_clear),
@@ -64,6 +66,7 @@ Fnd_Ctrl_Unit U_Fnd_ctrl_Unit(
                     .distance(distance),
                     .humidity_data(humidity_data),
                     .temperature_data(temperature_data),
+                    .t_command(t_command),
                     .clk(clk),
                     .rst(rst),
                     .o_mod_stopwatch(o_mod_stopwatch),
@@ -71,6 +74,7 @@ Fnd_Ctrl_Unit U_Fnd_ctrl_Unit(
                     .o_run(o_run),
                     .w_mod(switch_mod),
                     .ultra_mod(ultra_mod),
+                    .hump_mod(hump_mod),
                     .fnd_font(fnd_font),
                     .fnd_comm(fnd_comm)
 );
@@ -100,6 +104,8 @@ led_generate U_led_generate(
     .sw_mod(sw_mod),
     .switch_mod(switch_mod),
     .pm_mod(pm_mod),
+    .ultra_mod(ultra_mod),
+    .hump_mod(hump_mod),
     .led_mod(led_mod)
 );
 
@@ -125,16 +131,22 @@ module led_generate (
     input sw_mod,
     input switch_mod,
     input pm_mod,
-    output reg [5:0] led_mod
+    input ultra_mod,
+    input hump_mod,
+    output reg [7:0] led_mod
 );
 
 always @(posedge clk or posedge rst) begin
     if (rst) begin
         led_mod <= 6'b000000;
     end else begin
-        led_mod[1:0] <= sw_mod ? 2'b10 : 2'b01;
-        led_mod[3:2] <= switch_mod ? 2'b10 : 2'b01;
-        led_mod[5:4] <= pm_mod ? 2'b10 : 2'b01;
+        if(hump_mod) led_mod <= 8'b10000000;
+        else if(ultra_mod) led_mod <= 8'b01000000;
+        else begin
+            led_mod[1:0] <= sw_mod ? 2'b10 : 2'b01;
+            led_mod[3:2] <= switch_mod ? 2'b10 : 2'b01;
+            led_mod[5:4] <= pm_mod ? 2'b10 : 2'b01;
+        end
     end
 end
     

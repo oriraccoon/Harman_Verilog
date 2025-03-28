@@ -6,8 +6,8 @@ module Fnd_Ctrl_Unit(
     input o_run,
     input w_mod,
     input ultra_mod,
-    input hum_mod,
-    input temp_mod,
+    input hump_mod,
+    input [3:0] t_command,
     input [$clog2(400)-1:0] distance,
     input [15:0] humidity_data,
     input [15:0] temperature_data,
@@ -21,8 +21,8 @@ module Fnd_Ctrl_Unit(
     output [3:0] fnd_comm
 );
     wire o_clk;
-    wire [7:0] stopwatch_fnd_font, watch_fnd_font, ultra_fnd_font, hum_fnd_font, temp_fnd_font;
-    wire [3:0] stopwatch_fnd_comm, watch_fnd_comm, ultra_fnd_comm, hum_fnd_comm, temp_fnd_comm;
+    wire [7:0] stopwatch_fnd_font, watch_fnd_font, ultra_fnd_font, humtemp_fnd_font;
+    wire [3:0] stopwatch_fnd_comm, watch_fnd_comm, ultra_fnd_comm, humtemp_fnd_comm;
 
     stopwatch_fnd_ctrl U_stopwatch_fnd_ctrl(
                         .ms_counter(ms_counter),
@@ -61,30 +61,25 @@ module Fnd_Ctrl_Unit(
                         .an(ultra_fnd_comm)
     );
 
-    HT_fnd_ctrl U_hum_fnd_ctrl(
-                        .cen1(Humidity_data[3]),
-                        .cen10(Humidity_data[2]),
-                        .cen100(Humidity_data[1]),
-                        .cen1000(Humidity_data[0]),
+    HT_fnd_ctrl U_humtemp_fnd_ctrl(
+                        .hum1(hum_integral[3:0]),
+                        .hum10(hum_integral[7:4]),
+                        .hum100(hum_decimal[3:0]),
+                        .hum1000(hum_decimal[7:4]),
+                        .temp1(temp_integral[3:0]),
+                        .temp10(temp_integral[7:4]),
+                        .temp100(temp_decimal[3:0]),
+                        .temp1000(temp_decimal[7:4]),
                         .clk(clk),
                         .rst(rst),
-                        .seg_out(hum_fnd_font),
-                        .an(hum_fnd_comm)
+                        .switch_mod(t_command),
+                        .seg_out(humtemp_fnd_font),
+                        .an(humtemp_fnd_comm)
     );
 
-    HT_fnd_ctrl U_temp_fnd_ctrl(
-                        .cen1(Temperature_data[3]),
-                        .cen10(Temperature_data[2]),
-                        .cen100(Temperature_data[1]),
-                        .cen1000(Temperature_data[0]),
-                        .clk(clk),
-                        .rst(rst),
-                        .seg_out(temp_fnd_font),
-                        .an(temp_fnd_comm)
-    );
 
-    assign fnd_font = hum_mod ? hum_fnd_font : temp_mod ? temp_fnd_font : ultra_mod ? ultra_fnd_font : w_mod ? watch_fnd_font : stopwatch_fnd_font;
-    assign fnd_comm = hum_mod ? hum_fnd_comm : temp_mod ? temp_fnd_comm : ultra_mod ? ultra_fnd_comm : w_mod ? watch_fnd_comm : stopwatch_fnd_comm;
+    assign fnd_font = hump_mod ? humtemp_fnd_font : ultra_mod ? ultra_fnd_font : w_mod ? watch_fnd_font : stopwatch_fnd_font;
+    assign fnd_comm = hump_mod ? humtemp_fnd_comm : ultra_mod ? ultra_fnd_comm : w_mod ? watch_fnd_comm : stopwatch_fnd_comm;
 
     wire [3:0] Ultra_data [0:2];
     digit_spliter2 #(.WIDTH(9)) s_split(
@@ -92,24 +87,25 @@ module Fnd_Ctrl_Unit(
         .digit({Ultra_data[0], Ultra_data[1], Ultra_data[2]})
     );
 
-    wire [3:0] Humidity_data [0:3];
-    wire [3:0] Temperature_data [0:3];
+    wire [7:0] hum_integral, hum_decimal, temp_integral, temp_decimal;
+
+
 
     digit_spliter h_integral(
         .bcd(humidity_data[15:8]),
-        .digit({Humidity_data[3], Humidity_data[2]})
+        .digit(hum_integral)
     );
     digit_spliter h_decimal(
         .bcd(temperature_data[7:0]),
-        .digit({Humidity_data[1], Humidity_data[0]})
+        .digit(hum_decimal)
     );
     digit_spliter t_integral(
         .bcd(temperature_data[15:8]),
-        .digit({Temperature_data[3], Temperature_data[2]})
+        .digit(temp_integral)
     );
     digit_spliter t_decimal(
         .bcd(temperature_data[7:0]),
-        .digit({Temperature_data[1], Temperature_data[0]})
+        .digit(temp_decimal)
     );
 
 endmodule

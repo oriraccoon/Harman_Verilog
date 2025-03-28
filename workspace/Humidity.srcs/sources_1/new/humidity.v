@@ -142,6 +142,7 @@ module DHT_controll_unit (
                 next = START;
                 sec_next = 0;
                 tick_count_next = 0;
+                data_buffer_next = 0;
             end
         end
 
@@ -172,7 +173,7 @@ module DHT_controll_unit (
 
         RESPONSE: begin
             if(tick) begin
-                if(tick_count_reg >= 30) begin
+                if(tick_count_reg >= 20) begin
                     if (dht_io) begin
                         next = READY;
                         tick_count_next = 0;
@@ -196,23 +197,6 @@ module DHT_controll_unit (
         SET: begin
             if(tick) begin
                 if(tick_count_reg >= 15) begin
-                    if (dht_io) begin
-                        next = READ;
-                    end
-                end else tick_count_next = tick_count_reg + 1;
-            end
-        end
-
-        READ: begin
-            if (tick) begin
-                if(dht_io) begin
-                    tick_count_next = tick_count_reg + 1;
-                    if (tick_count_reg == TIME_OUT - 1) begin
-                        next = IDLE;
-                    end
-                end
-
-                else if (~dht_io) begin
                     if (bit_count == 40) begin
                         bit_count_next = 0;
                         if (data_buffer[7:0] == (data_buffer[39:32] + data_buffer[31:24] + data_buffer[23:16] + data_buffer[15:8])) begin
@@ -223,16 +207,31 @@ module DHT_controll_unit (
                             temperature_next = 16'd404;
                         end
                         next = IDLE;
-                    end
-                    else begin
-                        data_buffer_next = {data_buffer[38:0], (tick_count_reg >= DATA_0)};
-                        bit_count_next = bit_count + 1;
                         tick_count_next = 0;
-                        next = SET;
+                    end else if (dht_io) begin
+                        next = READ;
+                        tick_count_next = 0;
+                    end
+                end else tick_count_next = tick_count_reg + 1;
+            end
+        end
+
+        READ: begin
+            if (tick) begin
+                if (~dht_io) begin
                     
-                    
+                    data_buffer_next = {data_buffer[38:0], (tick_count_reg > DATA_0)};
+                    bit_count_next = bit_count + 1;
+                    tick_count_next = 0;
+                    next = SET;
+
+                end else if(dht_io) begin
+                    tick_count_next = tick_count_reg + 1;
+                    if (tick_count_reg == TIME_OUT - 1) begin
+                        next = IDLE;
                     end
                 end
+
             end
         end
     endcase

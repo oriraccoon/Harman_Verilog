@@ -6,6 +6,7 @@ module stopwatch_cu(
                     input sw_mod,
                     input w_mod,
                     input ultra_mod,
+                    input hump_mod,
                     input [3:0] t_command,
                     output reg o_run,
                     output reg o_clear,
@@ -41,7 +42,7 @@ module stopwatch_cu(
             mod_state <= MOD1;
             prev <= STOP;
         end
-        else if (w_mod == 0 & ~ultra_mod) begin
+        else if (w_mod == 0 & ~ultra_mod & ~hump_mod) begin
             if(next != CLEAR) prev <= state;
             state <= next;
             mod_state <= mod_next;

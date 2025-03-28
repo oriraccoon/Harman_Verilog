@@ -7,6 +7,7 @@ module watch_cu (
     input sw_mod,
     input w_mod,
     input ultra_mod,
+    input hump_mod,
     input [3:0] t_command,
     output reg o_mod,
     output reg o_sec_detect,
@@ -45,7 +46,7 @@ module watch_cu (
         if (rst) begin
             mod_state <= MSEC_SEC_MOD1;
             state <= IDLE;
-        end else if (w_mod == 1 & ~ultra_mod) begin
+        end else if (w_mod == 1 & ~ultra_mod & ~hump_mod) begin
             mod_state <= mod_next;
             state <= next;
         end

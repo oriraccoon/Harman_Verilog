@@ -1,17 +1,26 @@
-module ultra_fnd_ctrl(
-    input [3:0] cen1,
-    input [3:0] cen10,
-    input [3:0] cen100,
-    input [3:0] cen1000,
+module HT_fnd_ctrl(
+    input [3:0] hum1,
+    input [3:0] hum10,
+    input [3:0] hum100,
+    input [3:0] hum1000,
+    input [3:0] temp1,
+    input [3:0] temp10,
+    input [3:0] temp100,
+    input [3:0] temp1000,
     input clk,
     input rst,
+    input [3:0] switch_mod,
     output reg [7:0] seg_out,
     output reg [3:0] an
 );
 
+parameter HUMIDITY = 9, TEMPERATURE = 10;
+
     reg [7:0] seg_state;
     wire o_clk;
+    wire state;
 
+    assign state = (switch_mod == 9) ? 1 : (switch_mod == 10) ? 0 : state;
     clock_divider_200hz cd(
         .clk(clk),
         .rst(rst),
@@ -44,26 +53,54 @@ module ultra_fnd_ctrl(
     end
 
     always @(posedge o_clk) begin
-        case (an)
-            4'b0111: begin
-                an <= 4'b1110;
-                seg_out <= {1'b1,bcd2seg(cen1)};
+        case(state)
+            1 : begin 
+                case (an)
+                    4'b0111: begin
+                        an <= 4'b1110;
+                        seg_out <= {1'b1,bcd2seg(hum1)};
+                    end
+                    4'b1110: begin
+                        an <= 4'b1101;
+                        seg_out <= {1'b1,bcd2seg(hum10)};
+                    end
+                    4'b1101: begin
+                        an <= 4'b1011;
+                        seg_out <= {1'b0,bcd2seg(hum100)};
+                    end
+                    4'b1011: begin
+                        an <= 4'b0111;
+                        seg_out <= {1'b1,bcd2seg(hum1000)};
+                    end
+                    default: begin
+                        an <= 4'b1110;
+                        seg_out <= 8'hFF;
+                    end
+                endcase
             end
-            4'b1110: begin
-                an <= 4'b1101;
-                seg_out <= {1'b1,bcd2seg(cen10)};
-            end
-            4'b1101: begin
-                an <= 4'b1011;
-                seg_out <= {1'b0,bcd2seg(cen100)};
-            end
-            4'b1011: begin
-                an <= 4'b0111;
-                seg_out <= {1'b1,bcd2seg(cen1000)};
-            end
-            default: begin
-                an <= 4'b1110;
-                seg_out <= 8'hFF;
+            0: begin
+                case (an)
+                    4'b0111: begin
+                        an <= 4'b1110;
+                        seg_out <= {1'b1,bcd2seg(temp1)};
+                    end
+                    4'b1110: begin
+                        an <= 4'b1101;
+                        seg_out <= {1'b1,bcd2seg(temp10)};
+                    end
+                    4'b1101: begin
+                        an <= 4'b1011;
+                        seg_out <= {1'b0,bcd2seg(temp100)};
+                    end
+                    4'b1011: begin
+                        an <= 4'b0111;
+                        seg_out <= {1'b1,bcd2seg(temp1000)};
+                    end
+                    default: begin
+                        an <= 4'b1110;
+                        seg_out <= 8'hFF;
+                    end
+                endcase
             end
         endcase
     end

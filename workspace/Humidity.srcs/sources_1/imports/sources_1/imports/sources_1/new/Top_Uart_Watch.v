@@ -14,10 +14,11 @@ module Top_Uart_Watch(
     input switch_mod,
     input pm_mod,
     input ultra_mod,
+    input hump_mod,
     output trig,
     input echo,
 
-    output [5:0] led_mod,
+    output [7:0] led_mod,
     output [3:0] fnd_comm,
     output [7:0] fnd_font,
 
@@ -29,6 +30,8 @@ wire [7:0] w_tx_data;
 wire [3:0] w_command;
 wire [15:0] humidity_data, temperature_data;
 wire s_trigger;
+wire [2:0] c_state;
+wire [5:0] bit_count;
 
 wire [$clog2(400)-1:0] distance;
 
@@ -45,9 +48,10 @@ humidity U_humidity(
     .rst(rst),
     .humidity_data(humidity_data),
     .temperature_data(temperature_data),
+    .c_state(c_state),
+    .bit_count(bit_count),
     .dht_io(dht_io)
 );
-
 TOP_UART_FIFO U_UART_FIFO(
     .clk(clk),
     .rst(rst),
@@ -80,10 +84,13 @@ Top_Module U_STOP_AND_WATCH(
     .pm_mod(pm_mod),
     .distance(distance),
     .ultra_mod(ultra_mod),
+    .hump_mod(hump_mod),
     .t_command(w_command),
     .led_mod(led_mod),
     .fnd_comm(fnd_comm),
     .fnd_font(fnd_font),
+    .humidity_data(humidity_data),
+    .temperature_data(temperature_data),
     .w_sec_digit_1(w_sec_digit_1),
     .w_sec_digit_10(w_sec_digit_10),
     .w_min_digit_1(w_min_digit_1),
@@ -112,7 +119,7 @@ module detect_command(
     output [3:0] o_command
 );
 
-parameter IDLE = 0, WAIT = 1, RUN = 2, CLEAR = 3, SEC = 4, MIN = 5, HOUR = 6, TIME = 7, DISTANCE = 8;
+parameter IDLE = 0, WAIT = 1, RUN = 2, CLEAR = 3, SEC = 4, MIN = 5, HOUR = 6, TIME = 7, DISTANCE = 8, HUMIDITY = 9, TEMPERATURE = 10;
 
 reg [3:0] r_command, n_command;
 assign o_command = r_command;
@@ -148,6 +155,12 @@ end
                 end
                 "d", "D": begin
                     n_command = DISTANCE;
+                end
+                "o", "O": begin
+                    n_command = HUMIDITY;
+                end
+                "p", "P": begin
+                    n_command = TEMPERATURE;
                 end
                 default: n_command = IDLE;
             endcase

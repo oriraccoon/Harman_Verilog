@@ -24,6 +24,8 @@ module watch_dp (
     watch_time_counter #(.TICK_COUNT(100), .BIT_WIDTH(7)) U_time_msec( 
     .clk(clk),
     .rst(rst),
+    .pm_mod(z),
+    .mod_val(z),
     .i_tick(o_clk),
     .o_time_counter(ms_counter),
     .o_tick(ms_tick)
@@ -52,7 +54,8 @@ module watch_dp (
     .pm_mod(pm_mod),
     .mod_val(hour_mod),
     .i_tick(m_tick),
-    .o_time_counter(h_counter)
+    .o_time_counter(h_counter),
+    .o_tick(z)
     );
 
 endmodule
